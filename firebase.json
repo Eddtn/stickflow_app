@@ -1,0 +1,31 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "stockflow-1f243",
+          "appId": "1:558571535305:android:8d8c3cf2ab1fbb773cc618",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "stockflow-1f243",
+          "configurations": {
+            "android": "1:558571535305:android:8d8c3cf2ab1fbb773cc618",
+            "ios": "1:558571535305:ios:a3cdaa107eaa42bb3cc618",
+            "macos": "1:558571535305:ios:a3cdaa107eaa42bb3cc618",
+            "web": "1:558571535305:web:c78a5eedd9b4e4543cc618",
+            "windows": "1:558571535305:web:ccd66174522a47873cc618"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "us-central1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

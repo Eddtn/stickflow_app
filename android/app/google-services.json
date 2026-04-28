@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558571535305",
+    "project_id": "stockflow-1f243",
+    "storage_bucket": "stockflow-1f243.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558571535305:android:8d8c3cf2ab1fbb773cc618",
+        "android_client_info": {
+          "package_name": "com.example.stockflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC30WPmVbZWOU36AgKvsaYxHd3MA02CQsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
