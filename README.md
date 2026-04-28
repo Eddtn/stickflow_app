@@ -175,7 +175,7 @@ This app targets small businesses that currently manage stock manually. Key valu
 
 ## Author
 
-**Edmund** — Industrial Engineer + Flutter Developer  
+**Eddieton** — Industrial Engineer + Flutter Developer  
 [GitHub](https://github.com/Eddtn) · [LinkedIn](#) · [Email](#)
 
 ---
