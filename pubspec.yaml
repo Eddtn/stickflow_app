@@ -131,21 +131,21 @@ dependencies:
 
 #   # UI & Charts
   fl_chart: ^0.66.2
-  mobile_scanner: ^4.0.0       # Barcode scanner
+  mobile_scanner: ^7.2.0       # Barcode scanner
   image_picker: ^1.0.7
 
 #   # Export
   pdf: ^3.10.8
-  printing: ^5.12.0
+  printing: ^5.14.3
   csv: ^6.0.0
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
   share_plus: ^7.2.2
 
 #   # Notifications
 #   # flutter_local_notifications: ^16.3.2
 
   # Utilities
-  intl: ^0.19.0
+  intl: ^0.20.2
   uuid: ^4.3.3
   equatable: ^2.0.5
   cached_network_image: ^3.3.1
@@ -155,6 +155,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  permission_handler: ^12.0.1
+  go_router: ^17.2.2
+  barcode_widget: ^2.0.4
+  sqflite: ^2.4.2+1
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,355 @@
+// import 'package:flutter/material.dart';
+// import 'package:fl_chart/fl_chart.dart';
+
+// class ReportsScreen extends StatefulWidget {
+//   const ReportsScreen({super.key});
+
+//   @override
+//   State<ReportsScreen> createState() => _ReportsScreenState();
+// }
+
+// class _ReportsScreenState extends State<ReportsScreen> {
+//   DateTimeRange? _dateRange;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFF8F9FA),
+//       appBar: AppBar(
+//         title: const Text("Reports"),
+//         actions: [
+//           TextButton.icon(
+//             onPressed: () => _pickDateRange(context),
+//             icon: const Icon(Icons.date_range, size: 18),
+//             label: Text(
+//               _dateRange == null
+//                   ? "All time"
+//                   : "${_dateRange!.start.day}/${_dateRange!.start.month} - ${_dateRange!.end.day}/${_dateRange!.end.month}",
+//             ),
+//           ),
+//         ],
+//       ),
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           children: const [
+//             _ExportSection(),
+//             SizedBox(height: 24),
+//             _PieChartSection(),
+//             SizedBox(height: 24),
+//             _LineChartSection(),
+//             SizedBox(height: 24),
+//             _TopProductsSection(),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future<void> _pickDateRange(BuildContext context) async {
+//     final picked = await showDateRangePicker(
+//       context: context,
+//       firstDate: DateTime(2023),
+//       lastDate: DateTime.now(),
+//     );
+
+//     if (picked != null) {
+//       setState(() => _dateRange = picked);
+//     }
+//   }
+// }
+
+// //
+// // ─────────────────────────────────────────────
+// //  EXPORT BUTTONS
+// // ─────────────────────────────────────────────
+// //
+// class _ExportSection extends StatelessWidget {
+//   const _ExportSection();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: const [
+//         Row(
+//           children: [
+//             Expanded(
+//               child: _ExportBtn(
+//                 label: "Export Inventory PDF",
+//                 color: Colors.red,
+//               ),
+//             ),
+//             SizedBox(width: 10),
+//             Expanded(
+//               child: _ExportBtn(
+//                 label: "Export Inventory CSV",
+//                 color: Colors.green,
+//               ),
+//             ),
+//           ],
+//         ),
+//         SizedBox(height: 10),
+//         _ExportBtn(label: "Export Transactions PDF", color: Colors.blue),
+//       ],
+//     );
+//   }
+// }
+
+// class _ExportBtn extends StatelessWidget {
+//   final String label;
+//   final Color color;
+
+//   const _ExportBtn({required this.label, required this.color});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+//       decoration: BoxDecoration(
+//         color: color.withOpacity(0.08),
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       child: Row(
+//         children: [
+//           Icon(Icons.file_copy, color: color),
+//           const SizedBox(width: 10),
+//           Expanded(
+//             child: Text(
+//               label,
+//               style: TextStyle(color: color, fontWeight: FontWeight.w600),
+//             ),
+//           ),
+//           Icon(Icons.arrow_forward_ios, size: 12, color: color),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// //
+// // ─────────────────────────────────────────────
+// //  PIE CHART (STATIC)
+// // ─────────────────────────────────────────────
+// //
+// class _PieChartSection extends StatelessWidget {
+//   const _PieChartSection();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Column(
+//         children: [
+//           const Text("Inventory Overview"),
+//           const SizedBox(height: 12),
+//           SizedBox(
+//             height: 180,
+//             child: PieChart(
+//               PieChartData(
+//                 sections: [
+//                   PieChartSectionData(value: 60, color: Colors.green),
+//                   PieChartSectionData(value: 25, color: Colors.orange),
+//                   PieChartSectionData(value: 15, color: Colors.red),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// //
+// // ─────────────────────────────────────────────
+// //  LINE CHART (STATIC)
+// // ─────────────────────────────────────────────
+// //
+// class _LineChartSection extends StatelessWidget {
+//   const _LineChartSection();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Column(
+//         children: [
+//           const Text("Stock Movements"),
+//           const SizedBox(height: 12),
+//           SizedBox(
+//             height: 200,
+//             child: LineChart(
+//               LineChartData(
+//                 lineBarsData: [
+//                   LineChartBarData(
+//                     spots: const [
+//                       FlSpot(0, 2),
+//                       FlSpot(1, 5),
+//                       FlSpot(2, 3),
+//                       FlSpot(3, 7),
+//                       FlSpot(4, 4),
+//                     ],
+//                     isCurved: true,
+//                   ),
+//                 ],
+//                 borderData: FlBorderData(show: false),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// //
+// // ─────────────────────────────────────────────
+// //  TOP PRODUCTS
+// // ─────────────────────────────────────────────
+// //
+// class _TopProductsSection extends StatelessWidget {
+//   const _TopProductsSection();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final items = [
+//       {"name": "Laptop", "value": "₦500,000"},
+//       {"name": "Phone", "value": "₦300,000"},
+//       {"name": "Rice", "value": "₦200,000"},
+//     ];
+
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Column(
+//         children: items.map((item) {
+//           return Padding(
+//             padding: const EdgeInsets.only(bottom: 12),
+//             child: Row(
+//               children: [
+//                 Expanded(child: Text(item["name"]!)),
+//                 Text(item["value"]!),
+//               ],
+//             ),
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }
+
+import 'package:flutter/material.dart';
+
+class ReportsScreen extends StatelessWidget {
+  const ReportsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Reports & Export')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Generate Reports",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text("Choose a report type and date range"),
+
+            const SizedBox(height: 24),
+
+            _buildReportCard(
+              "Sales Report",
+              "Daily, Weekly & Monthly sales summary",
+              Icons.monetization_on,
+              Colors.green,
+            ),
+            _buildReportCard(
+              "Stock Movement History",
+              "All stock in and stock out transactions",
+              Icons.swap_vert,
+              Colors.blue,
+            ),
+            _buildReportCard(
+              "Low Stock Report",
+              "Products below minimum stock level",
+              Icons.warning_amber,
+              Colors.orange,
+            ),
+            _buildReportCard(
+              "Profit & Loss",
+              "Revenue vs Cost analysis",
+              Icons.analytics,
+              Colors.purple,
+            ),
+
+            const Spacer(),
+
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.picture_as_pdf),
+                    label: const Text("Export PDF"),
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.table_chart),
+                    label: const Text("Export CSV"),
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReportCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+  ) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: color.withOpacity(0.1),
+          child: Icon(icon, color: color),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+        onTap: () {},
+      ),
+    );
+  }
+}

@@ -28,14 +28,17 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:stockflow/screens/auth/login_screen.dart';
-import 'package:stockflow/screens/dashboard/ashboard_screen.dart';
-import 'package:stockflow/screens/products/add_product.dart';
-import 'package:stockflow/screens/products/product_detail.dart';
-import 'package:stockflow/screens/products/products_screen.dart';
-import 'package:stockflow/screens/reports/reports_screen.dart';
-import 'package:stockflow/screens/splash_screen.dart';
-import 'package:stockflow/screens/transactions/add_transaction.dart';
+import 'package:stockflow/features/auth/login_screen.dart';
+import 'package:stockflow/features/bottom_navigation_screen/bottom_nav_screen.dart';
+import 'package:stockflow/features/dashboard/ashboard_screen.dart';
+import 'package:stockflow/features/posscreen/posscreen.dart';
+import 'package:stockflow/features/products/add_product.dart';
+import 'package:stockflow/features/products/product_detail.dart';
+import 'package:stockflow/features/products/products_screen.dart';
+import 'package:stockflow/features/reports/reports_screen.dart';
+import 'package:stockflow/features/splash_screen.dart';
+import 'package:stockflow/features/transactions/add_transaction.dart';
+import 'package:stockflow/router.dart';
 import 'core/theme.dart';
 
 void main() {
@@ -47,13 +50,18 @@ class StockFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp
+    // .router
+    (
       title: 'StockFlow',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
 
       /// Simple UI entry (no router)
-      home: const DashboardScreen(),
+      home: const ProductsScreen(),
+      //  PosScreen(),
+
+      // routerConfig: router,
     );
   }
 }
