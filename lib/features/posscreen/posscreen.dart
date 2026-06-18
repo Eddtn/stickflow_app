@@ -3,6 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:math';
+import 'package:stockflow/database/database_helper.dart';
+import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
+import 'package:stockflow/features/reports/reports_screen.dart';
+import 'package:stockflow/features/sales_history/sales_history.dart';
+import 'package:stockflow/features/stock/low_stock_screen.dart';
+import 'package:stockflow/services/notification/notification_service.dart';
+import 'package:stockflow/services/store_profile_service.dart';
+import 'package:stockflow/services/printer_service.dart';
 
 // ─────────────────────────────────────────────
 //  THEME CONSTANTS
@@ -88,6 +96,8 @@ class _PosScreenState extends State<PosScreen>
     torchEnabled: false,
   );
 
+  int _lowStockCount = 0;
+
   final List<Map<String, dynamic>> _cart = [];
   String _lastScanned = '';
   Map<String, dynamic>? _scannedProduct;
@@ -102,6 +112,7 @@ class _PosScreenState extends State<PosScreen>
   void initState() {
     super.initState();
     _requestPermission();
+    _loadLowStockCount();
 
     _productRevealController = AnimationController(
       vsync: this,
@@ -116,6 +127,11 @@ class _PosScreenState extends State<PosScreen>
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _productRevealController, curve: Curves.easeOut),
     );
+  }
+
+  Future<void> _loadLowStockCount() async {
+    final count = await DatabaseHelper.instance.getLowStockCount();
+    if (mounted) setState(() => _lowStockCount = count);
   }
 
   Future<void> _requestPermission() async {
@@ -231,7 +247,7 @@ class _PosScreenState extends State<PosScreen>
   int get _totalItems =>
       _cart.fold(0, (sum, item) => sum + (item['quantity'] as int));
 
-  void _completeSale() {
+  void _completeSale() async {
     if (_cart.isEmpty) return;
     Navigator.of(context)
         .push(
@@ -243,6 +259,9 @@ class _PosScreenState extends State<PosScreen>
         .then((_) {
           setState(() => _cart.clear());
         });
+
+    await NotificationService.instance.checkAndNotifyLowStock();
+    _loadLowStockCount();
   }
 
   @override
@@ -327,11 +346,49 @@ class _PosScreenState extends State<PosScreen>
               _scannerController.toggleTorch();
             },
           ),
-          const SizedBox(width: 8),
           _headerIcon(
             icon: Icons.history_rounded,
             color: _kTextDim,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SalesHistoryScreen()),
+              );
+            },
+          ),
+
+          // _headerIcon(
+          //   icon: Icons.label_rounded,
+          //   color: _kTextDim,
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (_) => const BarcodeLabelsScreen()),
+          //     );
+          //   },
+          // ),
+
+          // _headerIcon(
+          //   icon: Icons.bar_chart_rounded,
+          //   color: _kTextDim,
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (_) => const ReportsScreen()),
+          //     );
+          //   },
+          // ),
+          _badgeIcon(
+            icon: Icons.warning_amber_rounded,
+            color: _lowStockCount > 0 ? _kWarning : _kTextDim,
+            badge: _lowStockCount,
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LowStockScreen()),
+              );
+              _loadLowStockCount(); // refresh badge on return
+            },
           ),
         ],
       ),
@@ -354,6 +411,55 @@ class _PosScreenState extends State<PosScreen>
           border: Border.all(color: Colors.white.withOpacity(0.06)),
         ),
         child: Icon(icon, color: color, size: 20),
+      ),
+    );
+  }
+
+  Widget _badgeIcon({
+    required IconData icon,
+    required Color color,
+    required int badge,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: _kSurface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Center(child: Icon(icon, color: color, size: 20)),
+            if (badge > 0)
+              Positioned(
+                right: -4,
+                top: -4,
+                child: Container(
+                  width: 17,
+                  height: 17,
+                  decoration: const BoxDecoration(
+                    color: _kWarning,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      badge > 9 ? '9+' : '$badge',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -1014,9 +1120,6 @@ class _CornerPainter extends CustomPainter {
   bool shouldRepaint(_CornerPainter old) => false;
 }
 
-// ─────────────────────────────────────────────
-//  RECEIPT SCREEN
-// ─────────────────────────────────────────────
 class ReceiptScreen extends StatefulWidget {
   final List<Map<String, dynamic>> cart;
   final double total;
@@ -1037,6 +1140,13 @@ class _ReceiptScreenState extends State<ReceiptScreen>
       'RCP-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
   final DateTime _now = DateTime.now();
 
+  bool _saleSaved = false;
+  String _storeName = 'My Store';
+  String _storeAddress = '';
+  String _storePhone = '';
+  String _footer = 'Thank you for your purchase!';
+
+  // ── Single initState — no duplicates ──────────────────────────────────────
   @override
   void initState() {
     super.initState();
@@ -1053,6 +1163,8 @@ class _ReceiptScreenState extends State<ReceiptScreen>
       end: 0,
     ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
     _ctrl.forward();
+    _saveSale();
+    _loadStoreProfile();
   }
 
   @override
@@ -1061,6 +1173,57 @@ class _ReceiptScreenState extends State<ReceiptScreen>
     super.dispose();
   }
 
+  // ── Load store profile from SharedPreferences ─────────────────────────────
+  Future<void> _loadStoreProfile() async {
+    final profile = await StoreProfileService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _storeName = profile.name;
+      _storeAddress = profile.address;
+      _storePhone = profile.phone;
+      _footer = profile.footer;
+    });
+  }
+
+  // ── Save sale to DB (once only) ───────────────────────────────────────────
+  Future<void> _saveSale() async {
+    if (_saleSaved) return;
+    _saleSaved = true;
+
+    final subtotal = widget.total;
+    final vat = subtotal * 0.075;
+    final total = subtotal + vat;
+
+    await DatabaseHelper.instance.insertSale(
+      receiptNo: _receiptNo,
+      subtotal: subtotal,
+      vat: vat,
+      total: total,
+      items: widget.cart,
+    );
+  }
+
+  // ── Print receipt ─────────────────────────────────────────────────────────
+  Future<void> _printReceipt() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _PrinterSheet(
+        storeName: _storeName,
+        storeAddress: _storeAddress,
+        storePhone: _storePhone,
+        receiptNo: _receiptNo,
+        soldAt: _now,
+        items: widget.cart,
+        subtotal: widget.total,
+        vat: widget.total * 0.075,
+        total: widget.total * 1.075,
+        footer: _footer,
+      ),
+    );
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
   String _formatPrice(num price) {
     final p = price.toInt();
     if (p >= 1000) {
@@ -1092,7 +1255,9 @@ class _ReceiptScreenState extends State<ReceiptScreen>
       'Nov',
       'Dec',
     ];
-    final h = _now.hour > 12 ? _now.hour - 12 : _now.hour;
+    final h = _now.hour > 12
+        ? _now.hour - 12
+        : (_now.hour == 0 ? 12 : _now.hour);
     final m = _now.minute.toString().padLeft(2, '0');
     final ampm = _now.hour >= 12 ? 'PM' : 'AM';
     return '${_now.day} ${months[_now.month - 1]} ${_now.year}  •  $h:$m $ampm';
@@ -1125,25 +1290,23 @@ class _ReceiptScreenState extends State<ReceiptScreen>
           actions: [
             IconButton(
               icon: const Icon(Icons.share_rounded, color: _kTextDim),
-              onPressed: () {},
+              onPressed: _printReceipt,
             ),
-            IconButton(
-              icon: const Icon(Icons.print_rounded, color: _kTextDim),
-              onPressed: () {},
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.print_rounded, color: _kTextDim),
+            //   onPressed: _printReceipt,
+            // ),
           ],
         ),
         body: AnimatedBuilder(
           animation: _ctrl,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _fade.value,
-              child: Transform.translate(
-                offset: Offset(0, _slide.value),
-                child: child,
-              ),
-            );
-          },
+          builder: (context, child) => Opacity(
+            opacity: _fade.value,
+            child: Transform.translate(
+              offset: Offset(0, _slide.value),
+              child: child,
+            ),
+          ),
           child: Column(
             children: [
               Expanded(
@@ -1425,6 +1588,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
       ),
     );
   }
+  // Wrong
 
   Widget _receiptMeta(
     String label,
@@ -1488,6 +1652,316 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+//  PRINTER SHEET
+//  Paste this at the bottom of pos_screen.dart,
+//  AFTER the closing } of _ReceiptScreenState.
+// ─────────────────────────────────────────────
+class _PrinterSheet extends StatefulWidget {
+  final String storeName;
+  final String storeAddress;
+  final String storePhone;
+  final String receiptNo;
+  final DateTime soldAt;
+  final List<Map<String, dynamic>> items;
+  final double subtotal;
+  final double vat;
+  final double total;
+  final String footer;
+
+  const _PrinterSheet({
+    required this.storeName,
+    required this.storeAddress,
+    required this.storePhone,
+    required this.receiptNo,
+    required this.soldAt,
+    required this.items,
+    required this.subtotal,
+    required this.vat,
+    required this.total,
+    required this.footer,
+  });
+
+  @override
+  State<_PrinterSheet> createState() => _PrinterSheetState();
+}
+
+class _PrinterSheetState extends State<_PrinterSheet> {
+  bool _printing = false;
+  String _status = '';
+
+  Future<void> _print() async {
+    setState(() {
+      _printing = true;
+      _status = 'Opening print dialog…';
+    });
+    try {
+      await PrinterService.instance.printReceipt(
+        context: context,
+        storeName: widget.storeName,
+        storeAddress: widget.storeAddress,
+        storePhone: widget.storePhone,
+        receiptNo: widget.receiptNo,
+        soldAt: widget.soldAt,
+        items: widget.items,
+        subtotal: widget.subtotal,
+        vat: widget.vat,
+        total: widget.total,
+        footer: widget.footer,
+      );
+      if (mounted)
+        setState(() {
+          _printing = false;
+          _status = '';
+        });
+    } catch (e) {
+      if (mounted)
+        setState(() {
+          _printing = false;
+          _status = 'Print failed: $e';
+        });
+    }
+  }
+
+  Future<void> _sharePdf() async {
+    setState(() {
+      _printing = true;
+      _status = 'Generating PDF…';
+    });
+    try {
+      await PrinterService.instance.shareReceiptAsPdf(
+        storeName: widget.storeName,
+        storeAddress: widget.storeAddress,
+        storePhone: widget.storePhone,
+        receiptNo: widget.receiptNo,
+        soldAt: widget.soldAt,
+        items: widget.items,
+        subtotal: widget.subtotal,
+        vat: widget.vat,
+        total: widget.total,
+        footer: widget.footer,
+      );
+      if (mounted)
+        setState(() {
+          _printing = false;
+          _status = '';
+        });
+    } catch (e) {
+      if (mounted)
+        setState(() {
+          _printing = false;
+          _status = 'Share failed: $e';
+        });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        16,
+        20,
+        24 + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      decoration: const BoxDecoration(
+        color: _kSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Title row
+          Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0066FF).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.print_rounded,
+                  color: Color(0xFF0066FF),
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Print Receipt',
+                      style: TextStyle(
+                        color: _kText,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      widget.receiptNo,
+                      style: const TextStyle(color: _kTextDim, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Status
+          if (_status.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                children: [
+                  if (_printing)
+                    const SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: _kAccent,
+                      ),
+                    )
+                  else
+                    Icon(
+                      _status.contains('failed')
+                          ? Icons.error_outline_rounded
+                          : Icons.check_circle_outline_rounded,
+                      color: _status.contains('failed') ? _kDanger : _kAccent,
+                      size: 14,
+                    ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _status,
+                      style: TextStyle(
+                        color: _status.contains('failed') ? _kDanger : _kAccent,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          // Option 1 — Print
+          _optionTile(
+            icon: Icons.print_rounded,
+            color: const Color(0xFF0066FF),
+            title: 'Print to Bluetooth / WiFi Printer',
+            subtitle: 'Opens system print dialog. Select your thermal printer.',
+            onTap: _printing ? null : _print,
+          ),
+          const SizedBox(height: 10),
+
+          // Option 2 — Share PDF
+          _optionTile(
+            icon: Icons.picture_as_pdf_rounded,
+            color: _kAccent,
+            title: 'Share / Save as PDF',
+            subtitle: 'Send via WhatsApp, email or save to phone.',
+            onTap: _printing ? null : _sharePdf,
+          ),
+          const SizedBox(height: 20),
+
+          // Cancel
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: _kTextDim, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _optionTile({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedOpacity(
+        opacity: onTap == null ? 0.4 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: _kCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: color.withOpacity(0.25)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: _kText,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: _kTextDim,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: color.withOpacity(0.5),
+                size: 20,
               ),
             ],
           ),

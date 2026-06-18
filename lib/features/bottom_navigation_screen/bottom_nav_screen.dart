@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stockflow/features/dashboard/ashboard_screen.dart';
+import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
 import 'package:stockflow/features/posscreen/posscreen.dart';
 import 'package:stockflow/features/products/products_screen.dart';
 import 'package:stockflow/features/reports/reports_screen.dart';
 import 'package:stockflow/features/stockscreen.dart';
+import 'package:stockflow/services/seller_session.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,9 +20,9 @@ class _DashboardScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const DashboardScreen(),
     const ProductsScreen(),
-    const PosScreen(),
-    // const ReportsScreen(),
-    ReportsScreen(),
+    const BarcodeLabelsScreen(),
+
+    if (SellerSession.instance.canViewReports) ReportsScreen(),
   ];
 
   @override

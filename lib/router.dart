@@ -67,7 +67,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stockflow/features/auth/login_screen.dart';
+import 'package:stockflow/features/auth/lock_screen.dart';
 import 'package:stockflow/features/bottom_navigation_screen/bottom_nav_screen.dart';
 import 'package:stockflow/features/dashboard/ashboard_screen.dart';
 import 'package:stockflow/features/posscreen/posscreen.dart';
@@ -91,7 +91,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/login',
       name: 'loginscreen',
-      builder: (context, state) => LoginScreen(),
+      builder: (context, state) => LockScreen(onAuthenticated: () {}),
     ),
     GoRoute(
       path: '/login',
@@ -114,13 +114,15 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/setting',
       name: 'settingsscreen',
-      builder: (context, state) => SettingsScreen(
-        user: {},
-        role: '',
-        onUserManagement: () {},
-        onChangePassword: () {},
-        onLogout: () {},
-      ),
+      builder: (context, state) => SettingsScreen(),
+
+      //  SettingsScreen(
+      //   user: {},
+      //   role: '',
+      //   onUserManagement: () {},
+      //   onChangePassword: () {},
+      //   onLogout: () {},
+      // ),
     ),
   ],
 );

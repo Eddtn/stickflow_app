@@ -1,229 +1,7 @@
-// import 'package:flutter/material.dart';
-
-// class ProductsScreen extends StatefulWidget {
-//   const ProductsScreen({super.key});
-
-//   @override
-//   State<ProductsScreen> createState() => _ProductsScreenState();
-// }
-
-// class _ProductsScreenState extends State<ProductsScreen> {
-//   bool isGridView = true;
-
-//   final List<Map<String, dynamic>> products = [
-//     {
-//       'id': 1,
-//       'name': 'Rice 5kg (Golden Penny)',
-//       'price': 14500,
-//       'stock': 45,
-//       'barcode': '123456789',
-//     },
-//     {
-//       'id': 2,
-//       'name': 'Indomie Carton (Chicken)',
-//       'price': 3200,
-//       'stock': 12,
-//       'barcode': '987654321',
-//     },
-//     {
-//       'id': 3,
-//       'name': 'Peak Milk 400g Tin',
-//       'price': 850,
-//       'stock': 78,
-//       'barcode': '555555555',
-//     },
-//     {
-//       'id': 4,
-//       'name': 'Dangote Sugar 1kg',
-//       'price': 450,
-//       'stock': 5,
-//       'barcode': '111222333',
-//     },
-//     {
-//       'id': 5,
-//       'name': 'Dangote Cement 50kg',
-//       'price': 3850,
-//       'stock': 8,
-//       'barcode': '444555666',
-//     },
-//     {
-//       'id': 6,
-//       'name': 'Sprite 50cl Crate',
-//       'price': 4200,
-//       'stock': 23,
-//       'barcode': '777888999',
-//     },
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Product Catalog'),
-//         actions: [
-//           IconButton(
-//             icon: Icon(isGridView ? Icons.list : Icons.grid_view),
-//             onPressed: () => setState(() => isGridView = !isGridView),
-//           ),
-//           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-//         ],
-//       ),
-//       body: Column(
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(12.0),
-//             child: TextField(
-//               decoration: InputDecoration(
-//                 hintText: 'Search products or barcode...',
-//                 prefixIcon: const Icon(Icons.search),
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(12),
-//                 ),
-//                 filled: true,
-//                 fillColor: Colors.white,
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: isGridView
-//                 ? GridView.builder(
-//                     padding: const EdgeInsets.all(12),
-//                     gridDelegate:
-//                         const SliverGridDelegateWithFixedCrossAxisCount(
-//                           crossAxisCount: 2,
-//                           childAspectRatio: 0.85,
-//                           crossAxisSpacing: 12,
-//                           mainAxisSpacing: 12,
-//                         ),
-//                     itemCount: products.length,
-//                     itemBuilder: (context, index) {
-//                       final product = products[index];
-//                       final isLowStock = product['stock'] < 10;
-
-//                       return Card(
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Container(
-//                               height: 100,
-//                               decoration: BoxDecoration(
-//                                 color: Colors.grey[200],
-//                                 borderRadius: const BorderRadius.vertical(
-//                                   top: Radius.circular(12),
-//                                 ),
-//                               ),
-//                               child: const Center(
-//                                 child: Icon(Icons.inventory_2, size: 50),
-//                               ),
-//                             ),
-//                             Padding(
-//                               padding: const EdgeInsets.all(12),
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text(
-//                                     product['name'],
-//                                     maxLines: 2,
-//                                     overflow: TextOverflow.ellipsis,
-//                                     style: const TextStyle(
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   const SizedBox(height: 8),
-//                                   Text(
-//                                     '₦${product['price']}',
-//                                     style: const TextStyle(
-//                                       fontSize: 18,
-//                                       fontWeight: FontWeight.bold,
-//                                       color: Color(0xFF0066CC),
-//                                     ),
-//                                   ),
-//                                   Row(
-//                                     mainAxisAlignment:
-//                                         MainAxisAlignment.spaceBetween,
-//                                     children: [
-//                                       Text('Stock: ${product['stock']}'),
-//                                       if (isLowStock)
-//                                         const Chip(
-//                                           label: Text(
-//                                             'Low',
-//                                             style: TextStyle(fontSize: 10),
-//                                           ),
-//                                           backgroundColor: Colors.orange,
-//                                           padding: EdgeInsets.zero,
-//                                         ),
-//                                     ],
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       );
-//                     },
-//                   )
-//                 : ListView.builder(
-//                     padding: const EdgeInsets.all(12),
-//                     itemCount: products.length,
-//                     itemBuilder: (context, index) {
-//                       final product = products[index];
-//                       final isLowStock = product['stock'] < 10;
-
-//                       return Card(
-//                         margin: const EdgeInsets.only(bottom: 10),
-//                         child: ListTile(
-//                           leading: const CircleAvatar(
-//                             backgroundColor: Color(0xFF0066CC),
-//                             child: Icon(Icons.inventory, color: Colors.white),
-//                           ),
-//                           title: Text(
-//                             product['name'],
-//                             style: const TextStyle(fontWeight: FontWeight.w600),
-//                           ),
-//                           subtitle: Text('Barcode: ${product['barcode']}'),
-//                           trailing: Column(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             crossAxisAlignment: CrossAxisAlignment.end,
-//                             children: [
-//                               Text(
-//                                 '₦${product['price']}',
-//                                 style: const TextStyle(
-//                                   fontWeight: FontWeight.bold,
-//                                 ),
-//                               ),
-//                               Text(
-//                                 'Stock: ${product['stock']}',
-//                                 style: TextStyle(
-//                                   color: isLowStock ? Colors.red : Colors.green,
-//                                   fontWeight: FontWeight.w500,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                   ),
-//           ),
-//         ],
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {},
-//         child: const Icon(Icons.add),
-//         tooltip: 'Add New Product',
-//       ),
-//     );
-//   }
-// }
-
-// lib/screens/products_screen.dart
-//
-// Full product management screen.
-// Users can view, search, add, edit and delete products — all offline.
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stockflow/database/database_helper.dart';
+import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
 import 'package:stockflow/features/products/product_model/prod_model.dart';
 
 // ── Theme (matches POS screen) ─────────────────────────────────────────────
@@ -371,13 +149,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
         appBar: AppBar(
           backgroundColor: _kBg,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: _kTextDim,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(
+          //     Icons.arrow_back_ios_new_rounded,
+          //     color: _kTextDim,
+          //   ),
+          //   onPressed: () => Navigator.pop(context),
+          // ),
           title: const Text(
             'Products',
             style: TextStyle(
@@ -682,6 +460,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
               icon: Icons.delete_outline_rounded,
               color: _kDanger,
               onTap: () => _deleteProduct(p),
+            ),
+            const SizedBox(width: 4),
+            _iconBtn(
+              icon: Icons.label_rounded,
+              color: const Color(0xFF7C9FFF),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BarcodeLabelsScreen(singleProduct: p),
+                  ),
+                );
+              },
             ),
           ],
         ),
