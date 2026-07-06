@@ -149,13 +149,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         appBar: AppBar(
           backgroundColor: _kBg,
           elevation: 0,
-          // leading: IconButton(
-          //   icon: const Icon(
-          //     Icons.arrow_back_ios_new_rounded,
-          //     color: _kTextDim,
-          //   ),
-          //   onPressed: () => Navigator.pop(context),
-          // ),
+        
           title: const Text(
             'Products',
             style: TextStyle(
@@ -207,6 +201,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
       ),
     );
   }
+
+
 
   Widget _buildSearchBar() {
     return Padding(
@@ -373,18 +369,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isLowStock
-              ? _kWarning.withOpacity(0.3)
-              : Colors.white.withOpacity(0.05),
+              ? _kWarning.withAlpha(1)
+              : Colors.white.withAlpha(0),
         ),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         leading: Container(
           width: 46,
           height: 46,
           decoration: BoxDecoration(
-            color: _kAccent.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: _kAccent.withAlpha(1),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
             child: Text(p.icon, style: const TextStyle(fontSize: 22)),
@@ -408,6 +404,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             const SizedBox(height: 4),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   '₦${_formatPrice(p.price)}',
@@ -438,16 +435,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 15),
                 Text(
                   p.barcode,
                   style: const TextStyle(color: _kTextDim, fontSize: 10),
                 ),
               ],
             ),
-          ],
-        ),
-        trailing: Row(
+            SizedBox(height: 15,),
+             Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             _iconBtn(
@@ -476,6 +472,38 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ],
         ),
+          ],
+          
+        ),
+        // trailing: Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   children: [
+        //     _iconBtn(
+        //       icon: Icons.edit_rounded,
+        //       color: _kAccent,
+        //       onTap: () => _openProductForm(product: p),
+        //     ),
+        //     const SizedBox(width: 4),
+        //     _iconBtn(
+        //       icon: Icons.delete_outline_rounded,
+        //       color: _kDanger,
+        //       onTap: () => _deleteProduct(p),
+        //     ),
+        //     const SizedBox(width: 4),
+        //     _iconBtn(
+        //       icon: Icons.label_rounded,
+        //       color: const Color(0xFF7C9FFF),
+        //       onTap: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(
+        //             builder: (_) => BarcodeLabelsScreen(singleProduct: p),
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
@@ -613,6 +641,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Container(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottom),
+     
       decoration: const BoxDecoration(
         color: _kSurface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -621,6 +650,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
         child: Form(
           key: _formKey,
           child: Column(
+            
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -814,7 +844,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                   onPressed: _saving ? null : _save,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kAccent,
-                    disabledBackgroundColor: _kAccent.withOpacity(0.4),
+                    disabledBackgroundColor: _kAccent.withAlpha(4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -839,6 +869,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                         ),
                 ),
               ),
+              SizedBox(height: 30,),
             ],
           ),
         ),

@@ -72,20 +72,6 @@ class _AuthGateState extends State<_AuthGate> {
     // After lock screen passes (or if no lock), show seller login:
     return const SellerLoginScreen();
 
-    // if (_needsAuth) {
-    //   return LockScreen(
-    //     onAuthenticated: () => setState(() => _needsAuth = false),
-    //   );
-    // }
-
-    // return const SellerLoginScreen();
-
-    // if (_needsAuth) {
-    //   return LockScreen(
-    //     onAuthenticated: () => setState(() => _needsAuth = false),
-    //   );
-    // }
-    // return const MainScreen();
-    // // DashboardScreen();
+   
   }
 }
