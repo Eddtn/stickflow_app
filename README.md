@@ -23,16 +23,16 @@ Most small warehouses, retail shops, and manufacturers in Nigeria track inventor
 ![Logistics Website Homepage](screenshots/homepage.png)
 
 ### Label Generator
-![Logistics Website Homepage](screenshots\label_generator.png)
+![Logistics Website Homepage](screenshots/label_generator.png)
 
 ### Product page
-![Logistics Website Homepage](screenshots\product.png)
+![Logistics Website Homepage](screenshots/product.png)
 
 ### Reports page
-![Logistics Website Homepage](screenshots\reports.png)
+![Logistics Website Homepage](screenshots/reports.png)
 
 ### Scan page
-![Logistics Website Homepage](screenshots\scan.png)
+![Logistics Website Homepage](screenshots/scan.png)
 
 ---
 
