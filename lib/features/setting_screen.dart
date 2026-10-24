@@ -378,11 +378,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.receipt_long_rounded, size: 13, color: _kInkMid),
-              const SizedBox(width: 6),
-              const Text(
+              Icon(Icons.receipt_long_rounded, size: 13, color: _kInkMid),
+              SizedBox(width: 6),
+              Text(
                 'Receipt Preview',
                 style: TextStyle(
                   color: _kInkMid,
@@ -390,8 +390,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Spacer(),
-              const Text(
+              Spacer(),
+              Text(
                 'LIVE',
                 style: TextStyle(
                   color: _kGreen,
@@ -428,9 +428,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
           const Divider(height: 16, color: _kBorder),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 'Rice 5kg  × 2',
                 style: TextStyle(fontSize: 11, color: _kInk),
@@ -460,9 +460,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
           const Divider(height: 12, color: _kBorder),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 'TOTAL',
                 style: TextStyle(
@@ -564,7 +564,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: (_authEnabled ? _kGreen : _kRed).withOpacity(0.1),
+              color: (_authEnabled ? _kGreen : _kRed).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -703,10 +703,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Divider(height: 1, color: _kBorder),
         _infoRow('Built with', 'Flutter'),
         const Divider(height: 1, color: _kBorder),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 12),
           child: Row(
-            children: const [
+            children: [
               Icon(Icons.favorite_rounded, color: _kRed, size: 15),
               SizedBox(width: 8),
               Text(
@@ -728,7 +728,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       borderRadius: BorderRadius.circular(20),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withValues(alpha: 0.05),
           blurRadius: 10,
           offset: const Offset(0, 3),
         ),
@@ -749,7 +749,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: color, size: 19),
@@ -813,7 +813,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: _kBlue.withOpacity(0.5), width: 1.5),
+        borderSide: BorderSide(color: _kBlue.withValues(alpha: 0.5), width: 1.5),
       ),
     ),
   );
@@ -841,7 +841,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          Icon(Icons.chevron_right_rounded, color: _kInkSoft, size: 20),
+          const Icon(Icons.chevron_right_rounded, color: _kInkSoft, size: 20),
         ],
       ),
     ),

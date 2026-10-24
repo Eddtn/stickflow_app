@@ -1,10 +1,3 @@
-// lib/services/auth_service.dart
-//
-// Handles all authentication logic:
-// • Biometric (fingerprint / face ID) via local_auth
-// • 4-digit passcode stored securely in SharedPreferences
-// • Auth state persistence — remembers if user is authenticated
-//   for the current session
 
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';

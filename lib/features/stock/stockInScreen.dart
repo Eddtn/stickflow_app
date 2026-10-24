@@ -1,7 +1,3 @@
-// lib/screens/stock_in_screen.dart
-//
-// Stock In — quickly restock one or many products
-// without going through the products edit screen.
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -236,9 +232,9 @@ class _StockInScreenState extends State<StockInScreen> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: _kGreen.withOpacity(0.08),
+                color: _kGreen.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _kGreen.withOpacity(0.25)),
+                border: Border.all(color: _kGreen.withValues(alpha: 0.25)),
               ),
               child: const Row(
                 children: [
@@ -286,7 +282,7 @@ class _StockInScreenState extends State<StockInScreen> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: _kBlue.withOpacity(0.4),
+                    color: _kBlue.withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                 ),
@@ -320,12 +316,12 @@ class _StockInScreenState extends State<StockInScreen> {
         color: _kWhite,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: hasQty ? _kGreen.withOpacity(0.4) : _kBorder,
+          color: hasQty ? _kGreen.withValues(alpha: 0.4) : _kBorder,
           width: hasQty ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -374,7 +370,7 @@ class _StockInScreenState extends State<StockInScreen> {
               color: _kBg,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: hasQty ? _kGreen.withOpacity(0.4) : _kBorder,
+                color: hasQty ? _kGreen.withValues(alpha: 0.4) : _kBorder,
               ),
             ),
             child: Row(
@@ -405,7 +401,7 @@ class _StockInScreenState extends State<StockInScreen> {
   Widget _stockBadge(String text, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(6),
     ),
     child: Text(

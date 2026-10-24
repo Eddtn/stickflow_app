@@ -1,11 +1,3 @@
-// lib/services/printer_service.dart
-//
-// Receipt printing using the `printing` package only.
-// Works with:
-//  • Bluetooth thermal printers (via system print dialog)
-//  • WiFi printers
-//  • PDF share (save as PDF)
-// No conflicting packages needed.
 
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';

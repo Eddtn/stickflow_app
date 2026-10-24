@@ -1,8 +1,3 @@
-// lib/screens/sales_history_screen.dart
-//
-// Complete Sales History screen.
-// Shows all past transactions with filters (Today / This Week / This Month / All),
-// summary stats bar, searchable transaction list, and a detail sheet per sale.
 
 import 'package:flutter/material.dart';
 import 'package:stockflow/database/database_helper.dart';

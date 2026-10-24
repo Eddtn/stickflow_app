@@ -3,16 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:stockflow/database/database_helper.dart';
 import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
 import 'package:stockflow/features/products/product_model/prod_model.dart';
-
-// ── Theme (matches POS screen) ─────────────────────────────────────────────
-const _kBg = Color(0xFF0A0F1E);
-const _kSurface = Color(0xFF141B2D);
-const _kCard = Color(0xFF1C2539);
-const _kAccent = Color(0xFF00E5A0);
-const _kDanger = Color(0xFFFF5370);
-const _kWarning = Color(0xFFFFB547);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
+import 'package:stockflow/core/constant.dart';
 
 const List<String> _kIcons = [
   '📦',
@@ -118,7 +109,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${p.name} deleted'),
-            backgroundColor: _kDanger,
+            backgroundColor: AppDarkColors.danger,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -143,17 +134,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: AppDarkColors.bg),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         appBar: AppBar(
-          backgroundColor: _kBg,
+          backgroundColor: AppDarkColors.bg,
           elevation: 0,
         
           title: const Text(
             'Products',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 18,
             ),
@@ -169,17 +160,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.add, color: _kBg, size: 18),
+                      Icon(Icons.add, color: AppDarkColors.bg, size: 18),
                       SizedBox(width: 4),
                       Text(
                         'Add',
                         style: TextStyle(
-                          color: _kBg,
+                          color: AppDarkColors.bg,
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
                         ),
@@ -210,13 +201,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
       child: TextField(
         controller: _searchCtrl,
         onChanged: _onSearch,
-        style: const TextStyle(color: _kText, fontSize: 14),
+        style: const TextStyle(color: AppDarkColors.text, fontSize: 14),
         decoration: InputDecoration(
           hintText: 'Search by name, brand, barcode…',
-          hintStyle: const TextStyle(color: _kTextDim, fontSize: 14),
+          hintStyle: const TextStyle(color: AppDarkColors.textDim, fontSize: 14),
           prefixIcon: const Icon(
             Icons.search_rounded,
-            color: _kTextDim,
+            color: AppDarkColors.textDim,
             size: 20,
           ),
           suffixIcon: _searchQuery.isNotEmpty
@@ -227,13 +218,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   },
                   child: const Icon(
                     Icons.close_rounded,
-                    color: _kTextDim,
+                    color: AppDarkColors.textDim,
                     size: 18,
                   ),
                 )
               : null,
           filled: true,
-          fillColor: _kCard,
+          fillColor: AppDarkColors.card,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
@@ -245,7 +236,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-              color: _kAccent.withOpacity(0.5),
+              color: AppDarkColors.accent.withValues(alpha: 0.5),
               width: 1.5,
             ),
           ),
@@ -281,7 +272,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             '$lowStock',
             'Low Stock',
             Icons.warning_amber_rounded,
-            color: lowStock > 0 ? _kWarning : _kAccent,
+            color: lowStock > 0 ? AppDarkColors.warning : AppDarkColors.accent,
           ),
         ],
       ),
@@ -292,15 +283,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
     String value,
     String label,
     IconData icon, {
-    Color color = _kAccent,
+    Color color = AppDarkColors.accent,
   }) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: _kCard,
+          color: AppDarkColors.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,7 +306,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 fontSize: 14,
               ),
             ),
-            Text(label, style: const TextStyle(color: _kTextDim, fontSize: 10)),
+            Text(label, style: const TextStyle(color: AppDarkColors.textDim, fontSize: 10)),
           ],
         ),
       ),
@@ -324,19 +315,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _buildList() {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator(color: _kAccent));
+      return const Center(child: CircularProgressIndicator(color: AppDarkColors.accent));
     }
     if (_products.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.inventory_2_outlined, color: _kTextDim, size: 56),
+            const Icon(Icons.inventory_2_outlined, color: AppDarkColors.textDim, size: 56),
             const SizedBox(height: 16),
             Text(
               _searchQuery.isEmpty ? 'No products yet' : 'No results found',
               style: const TextStyle(
-                color: _kText,
+                color: AppDarkColors.text,
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
               ),
@@ -346,7 +337,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               _searchQuery.isEmpty
                   ? 'Tap + Add to create your first product'
                   : 'Try a different search term',
-              style: const TextStyle(color: _kTextDim, fontSize: 13),
+              style: const TextStyle(color: AppDarkColors.textDim, fontSize: 13),
             ),
           ],
         ),
@@ -365,11 +356,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: _kCard,
+        color: AppDarkColors.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isLowStock
-              ? _kWarning.withAlpha(1)
+              ? AppDarkColors.warning.withAlpha(1)
               : Colors.white.withAlpha(0),
         ),
       ),
@@ -379,7 +370,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           width: 46,
           height: 46,
           decoration: BoxDecoration(
-            color: _kAccent.withAlpha(1),
+            color: AppDarkColors.accent.withAlpha(1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
@@ -389,7 +380,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         title: Text(
           p.name,
           style: const TextStyle(
-            color: _kText,
+            color: AppDarkColors.text,
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
@@ -400,7 +391,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             const SizedBox(height: 3),
             Text(
               '${p.brand} · ${p.category}',
-              style: const TextStyle(color: _kTextDim, fontSize: 12),
+              style: const TextStyle(color: AppDarkColors.textDim, fontSize: 12),
             ),
             const SizedBox(height: 4),
             Row(
@@ -409,7 +400,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 Text(
                   '₦${_formatPrice(p.price)}',
                   style: const TextStyle(
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                   ),
@@ -422,14 +413,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: isLowStock
-                        ? _kWarning.withOpacity(0.15)
-                        : _kAccent.withOpacity(0.1),
+                        ? AppDarkColors.warning.withValues(alpha: 0.15)
+                        : AppDarkColors.accent.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     '${p.stock} in stock',
                     style: TextStyle(
-                      color: isLowStock ? _kWarning : _kAccent,
+                      color: isLowStock ? AppDarkColors.warning : AppDarkColors.accent,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
@@ -438,29 +429,29 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 const SizedBox(width: 15),
                 Text(
                   p.barcode,
-                  style: const TextStyle(color: _kTextDim, fontSize: 10),
+                  style: const TextStyle(color: AppDarkColors.textDim, fontSize: 10),
                 ),
               ],
             ),
-            SizedBox(height: 15,),
+            const SizedBox(height: 15,),
              Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             _iconBtn(
               icon: Icons.edit_rounded,
-              color: _kAccent,
+              color: AppDarkColors.accent,
               onTap: () => _openProductForm(product: p),
             ),
             const SizedBox(width: 4),
             _iconBtn(
               icon: Icons.delete_outline_rounded,
-              color: _kDanger,
+              color: AppDarkColors.danger,
               onTap: () => _deleteProduct(p),
             ),
             const SizedBox(width: 4),
             _iconBtn(
               icon: Icons.label_rounded,
-              color: const Color(0xFF7C9FFF),
+              color: AppDarkColors.lightBlue,
               onTap: () {
                 Navigator.push(
                   context,
@@ -475,35 +466,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ],
           
         ),
-        // trailing: Row(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: [
-        //     _iconBtn(
-        //       icon: Icons.edit_rounded,
-        //       color: _kAccent,
-        //       onTap: () => _openProductForm(product: p),
-        //     ),
-        //     const SizedBox(width: 4),
-        //     _iconBtn(
-        //       icon: Icons.delete_outline_rounded,
-        //       color: _kDanger,
-        //       onTap: () => _deleteProduct(p),
-        //     ),
-        //     const SizedBox(width: 4),
-        //     _iconBtn(
-        //       icon: Icons.label_rounded,
-        //       color: const Color(0xFF7C9FFF),
-        //       onTap: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (_) => BarcodeLabelsScreen(singleProduct: p),
-        //           ),
-        //         );
-        //       },
-        //     ),
-        //   ],
-        // ),
+
+        
       ),
     );
   }
@@ -519,7 +483,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         width: 34,
         height: 34,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(9),
         ),
         child: Icon(icon, color: color, size: 17),
@@ -624,7 +588,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                   ? 'Barcode already exists!'
                   : 'Error saving product',
             ),
-            backgroundColor: _kDanger,
+            backgroundColor: AppDarkColors.danger,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -643,7 +607,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottom),
      
       decoration: const BoxDecoration(
-        color: _kSurface,
+        color: AppDarkColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SingleChildScrollView(
@@ -670,7 +634,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
               Text(
                 _isEditing ? 'Edit Product' : 'Add New Product',
                 style: const TextStyle(
-                  color: _kText,
+                  color: AppDarkColors.text,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
@@ -694,12 +658,12 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                         width: 46,
                         margin: const EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
-                          color: selected ? _kAccent.withOpacity(0.2) : _kCard,
+                          color: selected ? AppDarkColors.accent.withValues(alpha: 0.2) : AppDarkColors.card,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selected
-                                ? _kAccent
-                                : Colors.white.withOpacity(0.06),
+                                ? AppDarkColors.accent
+                                : Colors.white.withValues(alpha: 0.06),
                             width: selected ? 1.5 : 1,
                           ),
                         ),
@@ -758,19 +722,19 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: _kCard,
+                  color: AppDarkColors.card,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.06)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: _selectedCategory,
                     isExpanded: true,
-                    dropdownColor: _kCard,
-                    style: const TextStyle(color: _kText, fontSize: 14),
+                    dropdownColor: AppDarkColors.card,
+                    style: const TextStyle(color: AppDarkColors.text, fontSize: 14),
                     icon: const Icon(
                       Icons.expand_more_rounded,
-                      color: _kTextDim,
+                      color: AppDarkColors.textDim,
                     ),
                     items: _kCategories
                         .map((c) => DropdownMenuItem(value: c, child: Text(c)))
@@ -798,10 +762,12 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           validator: (v) {
-                            if (v == null || v.trim().isEmpty)
+                            if (v == null || v.trim().isEmpty) {
                               return 'Enter price';
-                            if (int.tryParse(v) == null || int.parse(v) <= 0)
+                            }
+                            if (int.tryParse(v) == null || int.parse(v) <= 0) {
                               return 'Invalid price';
+                            }
                             return null;
                           },
                         ),
@@ -823,8 +789,9 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           validator: (v) {
-                            if (v == null || v.trim().isEmpty)
+                            if (v == null || v.trim().isEmpty) {
                               return 'Enter stock';
+                            }
                             if (int.tryParse(v) == null) return 'Invalid qty';
                             return null;
                           },
@@ -843,8 +810,8 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                 child: ElevatedButton(
                   onPressed: _saving ? null : _save,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _kAccent,
-                    disabledBackgroundColor: _kAccent.withAlpha(4),
+                    backgroundColor: AppDarkColors.accent,
+                    disabledBackgroundColor: AppDarkColors.accent.withAlpha(4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -855,21 +822,21 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
                           width: 22,
                           height: 22,
                           child: CircularProgressIndicator(
-                            color: _kBg,
+                            color: AppDarkColors.bg,
                             strokeWidth: 2.5,
                           ),
                         )
                       : Text(
                           _isEditing ? 'Save Changes' : 'Add Product',
                           style: const TextStyle(
-                            color: _kBg,
+                            color: AppDarkColors.bg,
                             fontWeight: FontWeight.w800,
                             fontSize: 15,
                           ),
                         ),
                 ),
               ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
             ],
           ),
         ),
@@ -880,7 +847,7 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
   Widget _label(String text) => Text(
     text,
     style: const TextStyle(
-      color: _kTextDim,
+      color: AppDarkColors.textDim,
       fontSize: 12,
       fontWeight: FontWeight.w600,
     ),
@@ -900,12 +867,12 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       validator: validator,
-      style: TextStyle(color: enabled ? _kText : _kTextDim, fontSize: 14),
+      style: TextStyle(color: enabled ? AppDarkColors.text : AppDarkColors.textDim, fontSize: 14),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: _kTextDim, fontSize: 14),
+        hintStyle: const TextStyle(color: AppDarkColors.textDim, fontSize: 14),
         filled: true,
-        fillColor: enabled ? _kCard : _kCard.withOpacity(0.5),
+        fillColor: enabled ? AppDarkColors.card : AppDarkColors.card.withValues(alpha: 0.5),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 14,
@@ -916,17 +883,17 @@ class _ProductFormSheetState extends State<ProductFormSheet> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: _kAccent.withOpacity(0.5), width: 1.5),
+          borderSide: BorderSide(color: AppDarkColors.accent.withValues(alpha: 0.5), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: _kDanger, width: 1.5),
+          borderSide: const BorderSide(color: AppDarkColors.danger, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: _kDanger, width: 1.5),
+          borderSide: const BorderSide(color: AppDarkColors.danger, width: 1.5),
         ),
-        errorStyle: const TextStyle(color: _kDanger, fontSize: 11),
+        errorStyle: const TextStyle(color: AppDarkColors.danger, fontSize: 11),
       ),
     );
   }
@@ -943,23 +910,23 @@ class _ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: _kCard,
+      backgroundColor: AppDarkColors.card,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
         title,
-        style: const TextStyle(color: _kText, fontWeight: FontWeight.w700),
+        style: const TextStyle(color: AppDarkColors.text, fontWeight: FontWeight.w700),
       ),
-      content: Text(message, style: const TextStyle(color: _kTextDim)),
+      content: Text(message, style: const TextStyle(color: AppDarkColors.textDim)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancel', style: TextStyle(color: _kTextDim)),
+          child: const Text('Cancel', style: TextStyle(color: AppDarkColors.textDim)),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
           child: const Text(
             'Delete',
-            style: TextStyle(color: _kDanger, fontWeight: FontWeight.w700),
+            style: TextStyle(color: AppDarkColors.danger, fontWeight: FontWeight.w700),
           ),
         ),
       ],

@@ -1,7 +1,3 @@
-// lib/widgets/role_guard.dart
-//
-// Wraps any widget — shows it only if the condition is met,
-// otherwise shows a "no access" message or nothing.
 
 import 'package:flutter/material.dart';
 import '../services/seller_session.dart';

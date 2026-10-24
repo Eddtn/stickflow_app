@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockflow/features/auth/lock_screen.dart';
 import 'package:stockflow/features/auth/seller_login_screen.dart';
-import 'package:stockflow/features/bottom_navigation_screen/bottom_nav_screen.dart';
-import 'package:stockflow/features/dashboard/ashboard_screen.dart';
-import 'package:stockflow/features/dashboard/sellerScreen.dart';
-import 'package:stockflow/features/products/product_detail.dart';
-import 'package:stockflow/features/reports/reports_screen.dart';
 import 'package:stockflow/services/notification/notification_service.dart';
 import 'services/auth_service.dart';
 
@@ -20,10 +15,10 @@ class StockFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'StockFlow',
       debugShowCheckedModeBanner: false,
-      home: const _AuthGate(),
+      home: _AuthGate(),
     );
   }
 }

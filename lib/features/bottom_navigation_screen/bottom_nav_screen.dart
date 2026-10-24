@@ -4,7 +4,6 @@ import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
 import 'package:stockflow/features/posscreen/posscreen.dart';
 import 'package:stockflow/features/products/products_screen.dart';
 import 'package:stockflow/features/reports/reports_screen.dart';
-import 'package:stockflow/features/stockscreen.dart';
 import 'package:stockflow/services/seller_session.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,7 +21,7 @@ class _DashboardScreenState extends State<MainScreen> {
     const ProductsScreen(),
     const BarcodeLabelsScreen(),
 
-    if (SellerSession.instance.canViewReports) ReportsScreen(),
+    if (SellerSession.instance.canViewReports) const ReportsScreen(),
   ];
 
   @override
@@ -52,11 +51,11 @@ class _DashboardScreenState extends State<MainScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => PosScreen()),
+            MaterialPageRoute(builder: (_) => const PosScreen()),
           );
         },
-        child: const Icon(Icons.qr_code_scanner, size: 28),
         tooltip: 'Scan Barcode',
+        child: const Icon(Icons.qr_code_scanner, size: 28),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

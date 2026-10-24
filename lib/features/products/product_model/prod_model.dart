@@ -1,6 +1,3 @@
-// lib/models/product.dart
-//
-// Product model — converts between Dart objects and SQLite rows.
 
 class Product {
   final int? id;

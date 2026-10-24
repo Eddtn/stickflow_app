@@ -1,7 +1,3 @@
-// lib/services/store_profile_service.dart
-//
-// Central service for reading/writing store profile.
-// Import this anywhere you need the store name, VAT rate, etc.
 
 import 'package:shared_preferences/shared_preferences.dart';
 

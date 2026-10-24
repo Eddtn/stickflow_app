@@ -1,26 +1,11 @@
-// lib/screens/lock_screen.dart
-//
-// Lock Screen shown on app launch when auth is enabled.
-// • Fingerprint / Face ID with one tap
-// • 4-digit passcode keypad fallback
-// • Shake animation on wrong passcode
-// • "Forgot passcode" flow
 
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/services/auth_service.dart';
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-const _kBg = Color(0xFF0A0F1E);
-const _kCard = Color(0xFF1C2539);
-const _kAccent = Color(0xFF0066FF);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
-const _kDanger = Color(0xFFFF5370);
-const _kSuccess = Color(0xFF00E5A0);
 
 class LockScreen extends StatefulWidget {
   /// Called when authentication succeeds
@@ -142,9 +127,11 @@ class _LockScreenState extends State<LockScreen>
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppDarkColors.bg,
+      ),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -181,7 +168,7 @@ class _LockScreenState extends State<LockScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: _kAccent.withOpacity(0.4),
+              color: AppDarkColors.blue.withOpacity(0.4),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -197,7 +184,7 @@ class _LockScreenState extends State<LockScreen>
       const Text(
         'StockFlow',
         style: TextStyle(
-          color: _kText,
+          color: AppDarkColors.text,
           fontSize: 24,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5,
@@ -206,7 +193,7 @@ class _LockScreenState extends State<LockScreen>
       const SizedBox(height: 6),
       const Text(
         'Enter your passcode to continue',
-        style: TextStyle(color: _kTextDim, fontSize: 14),
+        style: TextStyle(color: AppDarkColors.textDim, fontSize: 14),
       ),
     ],
   );
@@ -231,10 +218,12 @@ class _LockScreenState extends State<LockScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: filled
-                  ? (_hasError ? _kDanger : _kAccent)
+                  ? (_hasError ? AppDarkColors.danger : AppDarkColors.blue)
                   : Colors.transparent,
               border: Border.all(
-                color: filled ? (_hasError ? _kDanger : _kAccent) : _kTextDim,
+                color: filled
+                    ? (_hasError ? AppDarkColors.danger : AppDarkColors.blue)
+                    : AppDarkColors.textDim,
                 width: 2,
               ),
             ),
@@ -255,7 +244,7 @@ class _LockScreenState extends State<LockScreen>
             child: Text(
               _message,
               style: TextStyle(
-                color: _hasError ? _kDanger : _kTextDim,
+                color: _hasError ? AppDarkColors.danger : AppDarkColors.textDim,
                 fontSize: 13,
               ),
             ),
@@ -302,7 +291,7 @@ class _LockScreenState extends State<LockScreen>
         width: 72,
         height: 72,
         decoration: BoxDecoration(
-          color: _kCard,
+          color: AppDarkColors.card,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -314,11 +303,15 @@ class _LockScreenState extends State<LockScreen>
         ),
         child: Center(
           child: isDel
-              ? const Icon(Icons.backspace_outlined, color: _kTextDim, size: 22)
+              ? const Icon(
+                  Icons.backspace_outlined,
+                  color: AppDarkColors.textDim,
+                  size: 22,
+                )
               : Text(
                   key,
                   style: const TextStyle(
-                    color: _kText,
+                    color: AppDarkColors.text,
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
@@ -337,28 +330,31 @@ class _LockScreenState extends State<LockScreen>
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: _kAccent.withOpacity(0.12),
+            color: AppDarkColors.blue.withOpacity(0.12),
             shape: BoxShape.circle,
-            border: Border.all(color: _kAccent.withOpacity(0.3), width: 1.5),
+            border: Border.all(
+              color: AppDarkColors.blue.withOpacity(0.3),
+              width: 1.5,
+            ),
           ),
           child: _checking
               ? const Padding(
                   padding: EdgeInsets.all(16),
                   child: CircularProgressIndicator(
-                    color: _kAccent,
+                    color: AppDarkColors.blue,
                     strokeWidth: 2,
                   ),
                 )
               : const Icon(
                   Icons.fingerprint_rounded,
-                  color: _kAccent,
+                  color: AppDarkColors.blue,
                   size: 30,
                 ),
         ),
         const SizedBox(height: 8),
         const Text(
           'Use Fingerprint',
-          style: TextStyle(color: _kTextDim, fontSize: 13),
+          style: TextStyle(color: AppDarkColors.textDim, fontSize: 13),
         ),
       ],
     ),

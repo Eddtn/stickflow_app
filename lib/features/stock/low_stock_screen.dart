@@ -1,10 +1,3 @@
-// lib/screens/low_stock_screen.dart
-//
-// Low Stock Alerts screen.
-// • Shows all products that are at or below their alert threshold
-// • Lets the user adjust the threshold per product (slider)
-// • One-tap "Notify Me Now" button to send an immediate push notification
-// • Live badge count shown on the POS header icon
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -140,7 +133,7 @@ class _LowStockScreenState extends State<LowStockScreen>
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: _kWarning.withOpacity(0.15),
+                        color: _kWarning.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: _kWarning.withOpacity(0.4)),
                       ),
@@ -201,16 +194,16 @@ class _LowStockScreenState extends State<LowStockScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: _lowStock.isEmpty
-              ? [_kAccent.withOpacity(0.1), _kAccent.withOpacity(0.05)]
-              : [_kWarning.withOpacity(0.12), _kDanger.withOpacity(0.08)],
+              ? [_kAccent.withValues(alpha: 0.1), _kAccent.withValues(alpha: 0.05)]
+              : [_kWarning.withValues(alpha: 0.12), _kDanger.withValues(alpha: 0.08)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: _lowStock.isEmpty
-              ? _kAccent.withOpacity(0.2)
-              : _kWarning.withOpacity(0.3),
+              ? _kAccent.withValues(alpha: 0.2)
+              : _kWarning.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -220,8 +213,8 @@ class _LowStockScreenState extends State<LowStockScreen>
             height: 52,
             decoration: BoxDecoration(
               color: _lowStock.isEmpty
-                  ? _kAccent.withOpacity(0.15)
-                  : _kWarning.withOpacity(0.15),
+                  ? _kAccent.withValues(alpha: 0.15)
+                  : _kWarning.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -285,9 +278,9 @@ class _LowStockScreenState extends State<LowStockScreen>
   Widget _pill(String label, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.15),
+      color: color.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: color.withOpacity(0.3)),
+      border: Border.all(color: color.withValues(alpha: 0.3)),
     ),
     child: Text(
       label,
@@ -336,10 +329,10 @@ class _LowStockScreenState extends State<LowStockScreen>
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(vertical: 11),
       decoration: BoxDecoration(
-        color: active ? color.withOpacity(0.15) : _kCard,
+        color: active ? color.withValues(alpha: 0.15) : _kCard,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: active ? color.withOpacity(0.4) : Colors.white10,
+          color: active ? color.withValues(alpha: 0.4) : Colors.white10,
           width: active ? 1.5 : 1,
         ),
       ),
@@ -380,10 +373,10 @@ class _LowStockScreenState extends State<LowStockScreen>
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isOut
-              ? _kDanger.withOpacity(0.25)
+              ? _kDanger.withValues(alpha: 0.25)
               : isLow
-              ? _kWarning.withOpacity(0.2)
-              : Colors.white.withOpacity(0.05),
+              ? _kWarning.withValues(alpha: 0.2)
+              : Colors.white.withValues(alpha: 0.05),
         ),
       ),
       child: Theme(
@@ -398,7 +391,7 @@ class _LowStockScreenState extends State<LowStockScreen>
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -481,7 +474,7 @@ class _LowStockScreenState extends State<LowStockScreen>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: _kWarning.withOpacity(0.15),
+                    color: _kWarning.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -499,9 +492,9 @@ class _LowStockScreenState extends State<LowStockScreen>
             SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 activeTrackColor: _kWarning,
-                inactiveTrackColor: _kWarning.withOpacity(0.15),
+                inactiveTrackColor: _kWarning.withValues(alpha: 0.15),
                 thumbColor: _kWarning,
-                overlayColor: _kWarning.withOpacity(0.15),
+                overlayColor: _kWarning.withValues(alpha: 0.15),
                 trackHeight: 4,
               ),
               child: Slider(
@@ -515,9 +508,9 @@ class _LowStockScreenState extends State<LowStockScreen>
               ),
             ),
             const SizedBox(height: 4),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text('1', style: TextStyle(color: _kTextDim, fontSize: 11)),
                 Text('100', style: TextStyle(color: _kTextDim, fontSize: 11)),
               ],
@@ -534,9 +527,10 @@ class _LowStockScreenState extends State<LowStockScreen>
     final max = (threshold * 2).clamp(20, 500);
     final frac = (stock / max).clamp(0.0, 1.0);
     Color color = _kAccent;
-    if (stock == 0)
+    if (stock == 0) {
       color = _kDanger;
-    else if (stock <= threshold)
+    } else if (stock <= threshold)
+      // ignore: curly_braces_in_flow_control_structures
       color = _kWarning;
 
     return ClipRRect(

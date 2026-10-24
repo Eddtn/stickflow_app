@@ -1,11 +1,3 @@
-// lib/screens/backup_screen.dart
-//
-// Data Backup & Export screen.
-// • DB info card — file size, last modified
-// • Export Database — shares raw .stockflow_backup file
-// • Restore Database — file picker to import a backup
-// • Export CSV — shares products + sales as CSV
-// • Auto-backup reminder setting
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -269,12 +261,12 @@ class _BackupScreenState extends State<BackupScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [_kAccent.withOpacity(0.12), _kBlue.withOpacity(0.08)],
+          colors: [_kAccent.withValues(alpha: 0.12), _kBlue.withValues(alpha: 0.08)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _kAccent.withOpacity(0.25)),
+        border: Border.all(color: _kAccent.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -282,7 +274,7 @@ class _BackupScreenState extends State<BackupScreen> {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: _kAccent.withOpacity(0.15),
+              color: _kAccent.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.storage_rounded, color: _kAccent, size: 28),
@@ -368,8 +360,8 @@ class _BackupScreenState extends State<BackupScreen> {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isDestructive
-              ? _kDanger.withOpacity(0.15)
-              : Colors.white.withOpacity(0.05),
+              ? _kDanger.withValues(alpha: 0.15)
+              : Colors.white.withValues(alpha: 0.05),
         ),
       ),
       child: Column(
@@ -381,7 +373,7 @@ class _BackupScreenState extends State<BackupScreen> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.12),
+                  color: iconColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: iconColor, size: 22),
@@ -404,9 +396,9 @@ class _BackupScreenState extends State<BackupScreen> {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: _kDanger.withOpacity(0.1),
+                    color: _kDanger.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: _kDanger.withOpacity(0.3)),
+                    border: Border.all(color: _kDanger.withValues(alpha: 0.3)),
                   ),
                   child: const Text(
                     'CAUTION',
@@ -433,14 +425,14 @@ class _BackupScreenState extends State<BackupScreen> {
               onPressed: loading ? null : onTap,
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonColor,
-                disabledBackgroundColor: buttonColor.withOpacity(0.3),
+                disabledBackgroundColor: buttonColor.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
               ),
               child: loading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
@@ -494,7 +486,7 @@ class _BackupScreenState extends State<BackupScreen> {
       decoration: BoxDecoration(
         color: _kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Column(
         children: steps.map((s) {
@@ -508,7 +500,7 @@ class _BackupScreenState extends State<BackupScreen> {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: s.color.withOpacity(0.1),
+                      color: s.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(s.icon, color: s.color, size: 18),

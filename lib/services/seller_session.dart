@@ -1,7 +1,3 @@
-// lib/services/seller_session.dart
-//
-// Holds the currently logged-in seller for the session.
-// Used throughout the app to check permissions.
 
 import '../models/seller.dart';
 

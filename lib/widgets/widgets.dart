@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stockflow/core/constant.dart';
-import '../models/product_model.dart';
 
 // ─── App Card ─────────────────────────────────────────────────────
 

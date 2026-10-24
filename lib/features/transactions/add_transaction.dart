@@ -98,7 +98,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               const SizedBox(height: 20),
 
               // ─── Product selector ─────────────────────────
-              _Label('Select product *'),
+              const _Label('Select product *'),
               DropdownButtonFormField<String>(
                 value: selectedProduct,
                 hint: const Text('Choose a product'),
@@ -112,7 +112,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               const SizedBox(height: 16),
 
               // ─── Quantity ────────────────────────────────
-              _Label('Quantity *'),
+              const _Label('Quantity *'),
               TextFormField(
                 controller: _qtyCtrl,
                 keyboardType: TextInputType.number,
@@ -122,7 +122,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               const SizedBox(height: 16),
 
               // ─── Reason ─────────────────────────────────
-              _Label('Reason *'),
+              const _Label('Reason *'),
               DropdownButtonFormField<String>(
                 value: reasons[isStockIn]!.contains(_reasonCtrl.text)
                     ? _reasonCtrl.text
@@ -137,7 +137,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               const SizedBox(height: 16),
 
               // ─── Note ───────────────────────────────────
-              _Label('Note (optional)'),
+              const _Label('Note (optional)'),
               TextFormField(
                 controller: _noteCtrl,
                 maxLines: 3,
@@ -193,7 +193,7 @@ class _TypeBtn extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: selected ? color.withOpacity(0.1) : Colors.transparent,
+            color: selected ? color.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(

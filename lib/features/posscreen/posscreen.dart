@@ -2,28 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:math';
 import 'package:stockflow/database/database_helper.dart';
-import 'package:stockflow/features/posscreen/barcode_label_screen.dart';
-import 'package:stockflow/features/reports/reports_screen.dart';
 import 'package:stockflow/features/sales_history/sales_history.dart';
 import 'package:stockflow/features/stock/low_stock_screen.dart';
 import 'package:stockflow/services/notification/notification_service.dart';
 import 'package:stockflow/services/store_profile_service.dart';
 import 'package:stockflow/services/printer_service.dart';
-
-// ─────────────────────────────────────────────
-//  THEME CONSTANTS
-// ─────────────────────────────────────────────
-const _kBg = Color(0xFF0A0F1E);
-const _kSurface = Color(0xFF141B2D);
-const _kCard = Color(0xFF1C2539);
-const _kAccent = Color(0xFF00E5A0);
-const _kAccentDim = Color(0xFF00B87A);
-const _kWarning = Color(0xFFFFB547);
-const _kDanger = Color(0xFFFF5370);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
+import 'package:stockflow/core/constant.dart';
 
 // ─────────────────────────────────────────────
 //  MOCK PRODUCT DATABASE
@@ -169,14 +154,14 @@ class _PosScreenState extends State<PosScreen>
   void _showProductNotFound() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: const [
+        content: const Row(
+          children: [
             Icon(Icons.error_outline, color: Colors.white),
             SizedBox(width: 10),
             Text('Product not found in database'),
           ],
         ),
-        backgroundColor: _kDanger,
+        backgroundColor: AppDarkColors.danger,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -217,7 +202,7 @@ class _PosScreenState extends State<PosScreen>
             Text('Added to cart'),
           ],
         ),
-        backgroundColor: _kAccentDim,
+        backgroundColor: AppDarkColors.accentDim,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -276,14 +261,14 @@ class _PosScreenState extends State<PosScreen>
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: _kBg,
+        scaffoldBackgroundColor: AppDarkColors.bg,
         colorScheme: const ColorScheme.dark(
-          primary: _kAccent,
-          surface: _kSurface,
+          primary: AppDarkColors.accent,
+          surface: AppDarkColors.surface,
         ),
       ),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -309,12 +294,12 @@ class _PosScreenState extends State<PosScreen>
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: _kAccent.withOpacity(0.15),
+              color: AppDarkColors.accent.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(
               Icons.storefront_rounded,
-              color: _kAccent,
+              color: AppDarkColors.accent,
               size: 20,
             ),
           ),
@@ -325,7 +310,7 @@ class _PosScreenState extends State<PosScreen>
               const Text(
                 'SCAN & PAY',
                 style: TextStyle(
-                  color: _kText,
+                  color: AppDarkColors.text,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 2,
@@ -333,14 +318,14 @@ class _PosScreenState extends State<PosScreen>
               ),
               Text(
                 '$_totalItems item${_totalItems == 1 ? '' : 's'} in cart',
-                style: const TextStyle(color: _kTextDim, fontSize: 12),
+                style: const TextStyle(color: AppDarkColors.textDim, fontSize: 12),
               ),
             ],
           ),
           const Spacer(),
           _headerIcon(
             icon: _flashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-            color: _flashOn ? _kWarning : _kTextDim,
+            color: _flashOn ? AppDarkColors.warning : AppDarkColors.textDim,
             onTap: () {
               setState(() => _flashOn = !_flashOn);
               _scannerController.toggleTorch();
@@ -348,7 +333,7 @@ class _PosScreenState extends State<PosScreen>
           ),
           _headerIcon(
             icon: Icons.history_rounded,
-            color: _kTextDim,
+            color: AppDarkColors.textDim,
             onTap: () {
               Navigator.push(
                 context,
@@ -359,7 +344,7 @@ class _PosScreenState extends State<PosScreen>
 
           // _headerIcon(
           //   icon: Icons.label_rounded,
-          //   color: _kTextDim,
+          //   color: AppDarkColors.textDim,
           //   onTap: () {
           //     Navigator.push(
           //       context,
@@ -370,7 +355,7 @@ class _PosScreenState extends State<PosScreen>
 
           // _headerIcon(
           //   icon: Icons.bar_chart_rounded,
-          //   color: _kTextDim,
+          //   color: AppDarkColors.textDim,
           //   onTap: () {
           //     Navigator.push(
           //       context,
@@ -380,7 +365,7 @@ class _PosScreenState extends State<PosScreen>
           // ),
           _badgeIcon(
             icon: Icons.warning_amber_rounded,
-            color: _lowStockCount > 0 ? _kWarning : _kTextDim,
+            color: _lowStockCount > 0 ? AppDarkColors.warning : AppDarkColors.textDim,
             badge: _lowStockCount,
             onTap: () async {
               await Navigator.push(
@@ -406,9 +391,9 @@ class _PosScreenState extends State<PosScreen>
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: _kSurface,
+          color: AppDarkColors.surface,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Icon(icon, color: color, size: 20),
       ),
@@ -427,9 +412,9 @@ class _PosScreenState extends State<PosScreen>
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: _kSurface,
+          color: AppDarkColors.surface,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -443,7 +428,7 @@ class _PosScreenState extends State<PosScreen>
                   width: 17,
                   height: 17,
                   decoration: const BoxDecoration(
-                    color: _kWarning,
+                    color: AppDarkColors.warning,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -471,10 +456,10 @@ class _PosScreenState extends State<PosScreen>
       height: 210,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _kAccent.withOpacity(0.3), width: 1.5),
+        border: Border.all(color: AppDarkColors.accent.withValues(alpha: 0.3), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: _kAccent.withOpacity(0.08),
+            color: AppDarkColors.accent.withValues(alpha: 0.08),
             blurRadius: 24,
             spreadRadius: 2,
           ),
@@ -526,14 +511,14 @@ class _PosScreenState extends State<PosScreen>
   List<Widget> _buildScanCorners() {
     const size = 22.0;
     const thick = 3.0;
-    const color = _kAccent;
+    const color = AppDarkColors.accent;
     final corners = [
-      [Alignment.topLeft, BorderRadius.only(topLeft: Radius.circular(4))],
-      [Alignment.topRight, BorderRadius.only(topRight: Radius.circular(4))],
-      [Alignment.bottomLeft, BorderRadius.only(bottomLeft: Radius.circular(4))],
+      [Alignment.topLeft, const BorderRadius.only(topLeft: Radius.circular(4))],
+      [Alignment.topRight, const BorderRadius.only(topRight: Radius.circular(4))],
+      [Alignment.bottomLeft, const BorderRadius.only(bottomLeft: Radius.circular(4))],
       [
         Alignment.bottomRight,
-        BorderRadius.only(bottomRight: Radius.circular(4)),
+        const BorderRadius.only(bottomRight: Radius.circular(4)),
       ],
     ];
 
@@ -574,12 +559,12 @@ class _PosScreenState extends State<PosScreen>
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _kCard,
+          color: AppDarkColors.card,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: _kAccent.withOpacity(0.4), width: 1.5),
+          border: Border.all(color: AppDarkColors.accent.withValues(alpha: 0.4), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: _kAccent.withOpacity(0.12),
+              color: AppDarkColors.accent.withValues(alpha: 0.12),
               blurRadius: 20,
               spreadRadius: 1,
             ),
@@ -591,7 +576,7 @@ class _PosScreenState extends State<PosScreen>
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: _kAccent.withOpacity(0.1),
+                color: AppDarkColors.accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
@@ -609,7 +594,7 @@ class _PosScreenState extends State<PosScreen>
                   Text(
                     _scannedProduct?['name'] ?? '',
                     style: const TextStyle(
-                      color: _kText,
+                      color: AppDarkColors.text,
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
                     ),
@@ -617,7 +602,7 @@ class _PosScreenState extends State<PosScreen>
                   const SizedBox(height: 2),
                   Text(
                     '${_scannedProduct?['brand']} · ${_scannedProduct?['category']}',
-                    style: const TextStyle(color: _kTextDim, fontSize: 12),
+                    style: const TextStyle(color: AppDarkColors.textDim, fontSize: 12),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -625,7 +610,7 @@ class _PosScreenState extends State<PosScreen>
                       Text(
                         '₦${_formatPrice(_scannedProduct?['price'] ?? 0)}',
                         style: const TextStyle(
-                          color: _kAccent,
+                          color: AppDarkColors.accent,
                           fontWeight: FontWeight.w800,
                           fontSize: 17,
                         ),
@@ -637,12 +622,12 @@ class _PosScreenState extends State<PosScreen>
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: _kAccent.withOpacity(0.12),
+                          color: AppDarkColors.accent.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           '${_scannedProduct?['stock']} in stock',
-                          style: const TextStyle(color: _kAccent, fontSize: 10),
+                          style: const TextStyle(color: AppDarkColors.accent, fontSize: 10),
                         ),
                       ),
                     ],
@@ -659,12 +644,12 @@ class _PosScreenState extends State<PosScreen>
                     width: 46,
                     height: 46,
                     decoration: BoxDecoration(
-                      color: _kAccent,
+                      color: AppDarkColors.accent,
                       borderRadius: BorderRadius.circular(13),
                     ),
                     child: const Icon(
                       Icons.add_shopping_cart_rounded,
-                      color: _kBg,
+                      color: AppDarkColors.bg,
                       size: 22,
                     ),
                   ),
@@ -676,12 +661,12 @@ class _PosScreenState extends State<PosScreen>
                     width: 46,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: _kDanger.withOpacity(0.15),
+                      color: AppDarkColors.danger.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
                       Icons.close_rounded,
-                      color: _kDanger,
+                      color: AppDarkColors.danger,
                       size: 16,
                     ),
                   ),
@@ -708,7 +693,7 @@ class _PosScreenState extends State<PosScreen>
                 const Text(
                   'Cart',
                   style: TextStyle(
-                    color: _kText,
+                    color: AppDarkColors.text,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
@@ -721,7 +706,7 @@ class _PosScreenState extends State<PosScreen>
                     },
                     child: const Text(
                       'Clear all',
-                      style: TextStyle(color: _kDanger, fontSize: 13),
+                      style: TextStyle(color: AppDarkColors.danger, fontSize: 13),
                     ),
                   ),
               ],
@@ -749,10 +734,10 @@ class _PosScreenState extends State<PosScreen>
           Container(
             width: 72,
             height: 72,
-            decoration: BoxDecoration(color: _kSurface, shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: AppDarkColors.surface, shape: BoxShape.circle),
             child: const Icon(
               Icons.qr_code_scanner_rounded,
-              color: _kTextDim,
+              color: AppDarkColors.textDim,
               size: 34,
             ),
           ),
@@ -760,7 +745,7 @@ class _PosScreenState extends State<PosScreen>
           const Text(
             'No items yet',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
@@ -769,7 +754,7 @@ class _PosScreenState extends State<PosScreen>
           const Text(
             'Scan a product barcode above\nto add it to the cart',
             textAlign: TextAlign.center,
-            style: TextStyle(color: _kTextDim, fontSize: 13, height: 1.5),
+            style: TextStyle(color: AppDarkColors.textDim, fontSize: 13, height: 1.5),
           ),
         ],
       ),
@@ -787,20 +772,20 @@ class _PosScreenState extends State<PosScreen>
       background: Container(
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: _kDanger.withOpacity(0.15),
+          color: AppDarkColors.danger.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        child: const Icon(Icons.delete_outline_rounded, color: _kDanger),
+        child: const Icon(Icons.delete_outline_rounded, color: AppDarkColors.danger),
       ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: _kCard,
+          color: AppDarkColors.card,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Row(
           children: [
@@ -813,7 +798,7 @@ class _PosScreenState extends State<PosScreen>
                   Text(
                     item['name'],
                     style: const TextStyle(
-                      color: _kText,
+                      color: AppDarkColors.text,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -821,7 +806,7 @@ class _PosScreenState extends State<PosScreen>
                   const SizedBox(height: 3),
                   Text(
                     '₦${_formatPrice(item['price'])} each',
-                    style: const TextStyle(color: _kTextDim, fontSize: 12),
+                    style: const TextStyle(color: AppDarkColors.textDim, fontSize: 12),
                   ),
                 ],
               ),
@@ -832,7 +817,7 @@ class _PosScreenState extends State<PosScreen>
                 Text(
                   '₦${_formatPrice(subtotal)}',
                   style: const TextStyle(
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
@@ -851,9 +836,9 @@ class _PosScreenState extends State<PosScreen>
     return Container(
       height: 30,
       decoration: BoxDecoration(
-        color: _kSurface,
+        color: AppDarkColors.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -875,7 +860,7 @@ class _PosScreenState extends State<PosScreen>
             child: Text(
               '${item['quantity']}',
               style: const TextStyle(
-                color: _kText,
+                color: AppDarkColors.text,
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
               ),
@@ -895,7 +880,7 @@ class _PosScreenState extends State<PosScreen>
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Icon(icon, size: 14, color: _kTextDim),
+        child: Icon(icon, size: 14, color: AppDarkColors.textDim),
       ),
     );
   }
@@ -905,8 +890,8 @@ class _PosScreenState extends State<PosScreen>
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 20),
       decoration: BoxDecoration(
-        color: _kSurface,
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
+        color: AppDarkColors.surface,
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.06))),
       ),
       child: Row(
         children: [
@@ -917,7 +902,7 @@ class _PosScreenState extends State<PosScreen>
               const Text(
                 'TOTAL',
                 style: TextStyle(
-                  color: _kTextDim,
+                  color: AppDarkColors.textDim,
                   fontSize: 10,
                   letterSpacing: 1.5,
                 ),
@@ -926,7 +911,7 @@ class _PosScreenState extends State<PosScreen>
               Text(
                 '₦${_formatPrice(_total.toInt())}',
                 style: const TextStyle(
-                  color: _kText,
+                  color: AppDarkColors.text,
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
                 ),
@@ -941,13 +926,13 @@ class _PosScreenState extends State<PosScreen>
                 duration: const Duration(milliseconds: 200),
                 height: 54,
                 decoration: BoxDecoration(
-                  color: _cart.isEmpty ? _kAccent.withOpacity(0.25) : _kAccent,
+                  color: _cart.isEmpty ? AppDarkColors.accent.withValues(alpha: 0.25) : AppDarkColors.accent,
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: _cart.isEmpty
                       ? []
                       : [
                           BoxShadow(
-                            color: _kAccent.withOpacity(0.35),
+                            color: AppDarkColors.accent.withValues(alpha: 0.35),
                             blurRadius: 16,
                             offset: const Offset(0, 6),
                           ),
@@ -958,14 +943,14 @@ class _PosScreenState extends State<PosScreen>
                   children: [
                     Icon(
                       Icons.receipt_long_rounded,
-                      color: _cart.isEmpty ? _kBg.withOpacity(0.4) : _kBg,
+                      color: _cart.isEmpty ? AppDarkColors.bg.withValues(alpha: 0.4) : AppDarkColors.bg,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Generate Receipt',
                       style: TextStyle(
-                        color: _cart.isEmpty ? _kBg.withOpacity(0.4) : _kBg,
+                        color: _cart.isEmpty ? AppDarkColors.bg.withValues(alpha: 0.4) : AppDarkColors.bg,
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
                         letterSpacing: 0.5,
@@ -1049,15 +1034,15 @@ class _ScanLineState extends State<_ScanLine>
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    _kAccent.withOpacity(0.8),
-                    _kAccent,
-                    _kAccent.withOpacity(0.8),
+                    AppDarkColors.accent.withValues(alpha: 0.8),
+                    AppDarkColors.accent,
+                    AppDarkColors.accent.withValues(alpha: 0.8),
                     Colors.transparent,
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _kAccent.withOpacity(0.5),
+                    color: AppDarkColors.accent.withValues(alpha: 0.5),
                     blurRadius: 8,
                     spreadRadius: 2,
                   ),
@@ -1266,34 +1251,34 @@ class _ReceiptScreenState extends State<ReceiptScreen>
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: AppDarkColors.bg),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         appBar: AppBar(
-          backgroundColor: _kBg,
+          backgroundColor: AppDarkColors.bg,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: _kTextDim,
+              color: AppDarkColors.textDim,
             ),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             'Receipt',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 18,
             ),
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.share_rounded, color: _kTextDim),
+              icon: const Icon(Icons.share_rounded, color: AppDarkColors.textDim),
               onPressed: _printReceipt,
             ),
             // IconButton(
-            //   icon: const Icon(Icons.print_rounded, color: _kTextDim),
+            //   icon: const Icon(Icons.print_rounded, color: AppDarkColors.textDim),
             //   onPressed: _printReceipt,
             // ),
           ],
@@ -1326,9 +1311,9 @@ class _ReceiptScreenState extends State<ReceiptScreen>
   Widget _buildReceiptCard() {
     return Container(
       decoration: BoxDecoration(
-        color: _kCard,
+        color: AppDarkColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.07)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
       ),
       child: Column(
         children: [
@@ -1336,12 +1321,12 @@ class _ReceiptScreenState extends State<ReceiptScreen>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: _kAccent.withOpacity(0.08),
+              color: AppDarkColors.accent.withValues(alpha: 0.08),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
               border: Border(
-                bottom: BorderSide(color: _kAccent.withOpacity(0.15)),
+                bottom: BorderSide(color: AppDarkColors.accent.withValues(alpha: 0.15)),
               ),
             ),
             child: Column(
@@ -1350,12 +1335,12 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: _kAccent.withOpacity(0.15),
+                    color: AppDarkColors.accent.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.storefront_rounded,
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     size: 26,
                   ),
                 ),
@@ -1363,7 +1348,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                 const Text(
                   'MY STORE',
                   style: TextStyle(
-                    color: _kText,
+                    color: AppDarkColors.text,
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 3,
@@ -1372,7 +1357,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                 const SizedBox(height: 4),
                 const Text(
                   'Official Sales Receipt',
-                  style: TextStyle(color: _kTextDim, fontSize: 13),
+                  style: TextStyle(color: AppDarkColors.textDim, fontSize: 13),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -1396,14 +1381,14 @@ class _ReceiptScreenState extends State<ReceiptScreen>
             child: Column(
               children: [
                 // Header row
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Expanded(
                       flex: 5,
                       child: Text(
                         'ITEM',
                         style: TextStyle(
-                          color: _kTextDim,
+                          color: AppDarkColors.textDim,
                           fontSize: 11,
                           letterSpacing: 1.2,
                         ),
@@ -1412,7 +1397,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                     Text(
                       'QTY',
                       style: TextStyle(
-                        color: _kTextDim,
+                        color: AppDarkColors.textDim,
                         fontSize: 11,
                         letterSpacing: 1.2,
                       ),
@@ -1424,7 +1409,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                         'AMOUNT',
                         textAlign: TextAlign.right,
                         style: TextStyle(
-                          color: _kTextDim,
+                          color: AppDarkColors.textDim,
                           fontSize: 11,
                           letterSpacing: 1.2,
                         ),
@@ -1453,7 +1438,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                               Text(
                                 '${item['icon']}  ${item['name']}',
                                 style: const TextStyle(
-                                  color: _kText,
+                                  color: AppDarkColors.text,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                 ),
@@ -1461,7 +1446,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                               Text(
                                 '₦${_formatPrice(item['price'])} each',
                                 style: const TextStyle(
-                                  color: _kTextDim,
+                                  color: AppDarkColors.textDim,
                                   fontSize: 12,
                                 ),
                               ),
@@ -1471,7 +1456,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                         Text(
                           'x${item['quantity']}',
                           style: const TextStyle(
-                            color: _kTextDim,
+                            color: AppDarkColors.textDim,
                             fontSize: 14,
                           ),
                         ),
@@ -1482,7 +1467,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                             '₦${_formatPrice(subtotal)}',
                             textAlign: TextAlign.right,
                             style: const TextStyle(
-                              color: _kText,
+                              color: AppDarkColors.text,
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
@@ -1501,7 +1486,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
             margin: const EdgeInsets.all(20),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _kSurface,
+              color: AppDarkColors.surface,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Column(
@@ -1522,7 +1507,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                     const Text(
                       'TOTAL PAID',
                       style: TextStyle(
-                        color: _kText,
+                        color: AppDarkColors.text,
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
                         letterSpacing: 0.5,
@@ -1531,7 +1516,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                     Text(
                       '₦${_formatPrice(widget.total * 1.075)}',
                       style: const TextStyle(
-                        color: _kAccent,
+                        color: AppDarkColors.accent,
                         fontWeight: FontWeight.w800,
                         fontSize: 22,
                       ),
@@ -1552,22 +1537,22 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _kAccent.withOpacity(0.08),
+                    color: AppDarkColors.accent.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle_rounded,
-                        color: _kAccent,
+                        color: AppDarkColors.accent,
                         size: 18,
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
+                      SizedBox(width: 8),
+                      Text(
                         'Sale Completed Successfully',
                         style: TextStyle(
-                          color: _kAccent,
+                          color: AppDarkColors.accent,
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -1579,7 +1564,7 @@ class _ReceiptScreenState extends State<ReceiptScreen>
                 const Text(
                   'Thank you for your purchase!\nPlease come again.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: _kTextDim, fontSize: 13, height: 1.6),
+                  style: TextStyle(color: AppDarkColors.textDim, fontSize: 13, height: 1.6),
                 ),
               ],
             ),
@@ -1600,12 +1585,12 @@ class _ReceiptScreenState extends State<ReceiptScreen>
           ? CrossAxisAlignment.end
           : CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: _kTextDim, fontSize: 11)),
+        Text(label, style: const TextStyle(color: AppDarkColors.textDim, fontSize: 11)),
         const SizedBox(height: 2),
         Text(
           value,
           style: const TextStyle(
-            color: _kText,
+            color: AppDarkColors.text,
             fontWeight: FontWeight.w600,
             fontSize: 12,
           ),
@@ -1618,8 +1603,8 @@ class _ReceiptScreenState extends State<ReceiptScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: _kTextDim, fontSize: 13)),
-        Text(value, style: const TextStyle(color: _kText, fontSize: 13)),
+        Text(label, style: const TextStyle(color: AppDarkColors.textDim, fontSize: 13)),
+        Text(value, style: const TextStyle(color: AppDarkColors.text, fontSize: 13)),
       ],
     );
   }
@@ -1627,14 +1612,14 @@ class _ReceiptScreenState extends State<ReceiptScreen>
   Widget _buildDoneButton() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-      color: _kBg,
+      color: AppDarkColors.bg,
       child: SizedBox(
         width: double.infinity,
         height: 54,
         child: ElevatedButton(
           onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: _kAccent,
+            backgroundColor: AppDarkColors.accent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
@@ -1643,12 +1628,12 @@ class _ReceiptScreenState extends State<ReceiptScreen>
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.qr_code_scanner_rounded, color: _kBg, size: 20),
+              Icon(Icons.qr_code_scanner_rounded, color: AppDarkColors.bg, size: 20),
               SizedBox(width: 10),
               Text(
                 'Scan New Transaction',
                 style: TextStyle(
-                  color: _kBg,
+                  color: AppDarkColors.bg,
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
                 ),
@@ -1718,17 +1703,19 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         total: widget.total,
         footer: widget.footer,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = '';
         });
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = 'Print failed: $e';
         });
+      }
     }
   }
 
@@ -1750,17 +1737,19 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         total: widget.total,
         footer: widget.footer,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = '';
         });
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = 'Share failed: $e';
         });
+      }
     }
   }
 
@@ -1774,7 +1763,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         24 + MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: const BoxDecoration(
-        color: _kSurface,
+        color: AppDarkColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -1800,12 +1789,12 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0066FF).withOpacity(0.12),
+                  color: AppDarkColors.blue.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.print_rounded,
-                  color: Color(0xFF0066FF),
+                  color: AppDarkColors.blue,
                   size: 22,
                 ),
               ),
@@ -1817,14 +1806,14 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                     const Text(
                       'Print Receipt',
                       style: TextStyle(
-                        color: _kText,
+                        color: AppDarkColors.text,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
                       ),
                     ),
                     Text(
                       widget.receiptNo,
-                      style: const TextStyle(color: _kTextDim, fontSize: 12),
+                      style: const TextStyle(color: AppDarkColors.textDim, fontSize: 12),
                     ),
                   ],
                 ),
@@ -1845,7 +1834,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                       height: 14,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: _kAccent,
+                        color: AppDarkColors.accent,
                       ),
                     )
                   else
@@ -1853,7 +1842,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                       _status.contains('failed')
                           ? Icons.error_outline_rounded
                           : Icons.check_circle_outline_rounded,
-                      color: _status.contains('failed') ? _kDanger : _kAccent,
+                      color: _status.contains('failed') ? AppDarkColors.danger : AppDarkColors.accent,
                       size: 14,
                     ),
                   const SizedBox(width: 8),
@@ -1861,7 +1850,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                     child: Text(
                       _status,
                       style: TextStyle(
-                        color: _status.contains('failed') ? _kDanger : _kAccent,
+                        color: _status.contains('failed') ? AppDarkColors.danger : AppDarkColors.accent,
                         fontSize: 12,
                       ),
                     ),
@@ -1873,7 +1862,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
           // Option 1 — Print
           _optionTile(
             icon: Icons.print_rounded,
-            color: const Color(0xFF0066FF),
+            color: AppDarkColors.blue,
             title: 'Print to Bluetooth / WiFi Printer',
             subtitle: 'Opens system print dialog. Select your thermal printer.',
             onTap: _printing ? null : _print,
@@ -1883,7 +1872,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
           // Option 2 — Share PDF
           _optionTile(
             icon: Icons.picture_as_pdf_rounded,
-            color: _kAccent,
+            color: AppDarkColors.accent,
             title: 'Share / Save as PDF',
             subtitle: 'Send via WhatsApp, email or save to phone.',
             onTap: _printing ? null : _sharePdf,
@@ -1895,7 +1884,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
             onTap: () => Navigator.pop(context),
             child: const Text(
               'Cancel',
-              style: TextStyle(color: _kTextDim, fontSize: 14),
+              style: TextStyle(color: AppDarkColors.textDim, fontSize: 14),
             ),
           ),
         ],
@@ -1918,9 +1907,9 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: _kCard,
+            color: AppDarkColors.card,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withOpacity(0.25)),
+            border: Border.all(color: color.withValues(alpha: 0.25)),
           ),
           child: Row(
             children: [
@@ -1928,7 +1917,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 22),
@@ -1941,7 +1930,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                     Text(
                       title,
                       style: const TextStyle(
-                        color: _kText,
+                        color: AppDarkColors.text,
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
                       ),
@@ -1950,7 +1939,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: _kTextDim,
+                        color: AppDarkColors.textDim,
                         fontSize: 12,
                         height: 1.4,
                       ),
@@ -1960,7 +1949,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: color.withOpacity(0.5),
+                color: color.withValues(alpha: 0.5),
                 size: 20,
               ),
             ],

@@ -33,7 +33,7 @@ class SplashScreen extends StatelessWidget {
             Text(
               subtitle,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontSize: 14,
               ),
             ),
@@ -58,7 +58,7 @@ class _Logo extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: const Icon(

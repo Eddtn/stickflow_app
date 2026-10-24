@@ -1,40 +1,10 @@
-// lib/screens/sellers_screen.dart
-//
-// Sellers / Cashier Management Screen
-// • View all cashiers with today's sales stats
-// • Add new cashier with name + 4-digit PIN
-// • Edit name, role or PIN
-// • Deactivate a cashier (keeps their sales records)
-// • Tap any cashier to see their full sales breakdown
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/database/database_helper.dart';
 import 'package:stockflow/models/seller.dart';
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-const _kBg = Color(0xFFF0F4F8);
-const _kWhite = Colors.white;
-const _kBlue = Color(0xFF0057FF);
-const _kGreen = Color(0xFF00C17C);
-const _kOrange = Color(0xFFFF8C00);
-const _kRed = Color(0xFFE53935);
-const _kPurple = Color(0xFF7C3AED);
-const _kInk = Color(0xFF0D1B2A);
-const _kInkMid = Color(0xFF4A5568);
-const _kInkSoft = Color(0xFFCBD5E0);
-const _kBorder = Color(0xFFEEF2F7);
-
-// avatar colours cycling per seller index
-const _kAvatarColors = [
-  _kBlue,
-  _kGreen,
-  _kOrange,
-  _kPurple,
-  Color(0xFFFF5370),
-  Color(0xFF00BCD4),
-];
 
 // ─────────────────────────────────────────────
 //  SELLERS SCREEN
@@ -145,8 +115,8 @@ class _SellersScreenState extends State<SellersScreen> {
       backgroundColor: Colors.transparent,
       builder: (_) => _SellerDetailSheet(
         seller: s,
-        avatarColor:
-            _kAvatarColors[_sellers.indexOf(s) % _kAvatarColors.length],
+        avatarColor: AppColors
+            .avatarColors[_sellers.indexOf(s) % AppColors.avatarColors.length],
       ),
     );
   }
@@ -155,12 +125,12 @@ class _SellersScreenState extends State<SellersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: _kWhite,
+        backgroundColor: AppColors.cardBg,
         elevation: 0,
-        surfaceTintColor: _kWhite,
-        foregroundColor: _kInk,
+        surfaceTintColor: AppColors.cardBg,
+        foregroundColor: AppColors.textPrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
@@ -170,7 +140,7 @@ class _SellersScreenState extends State<SellersScreen> {
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 18,
-            color: _kInk,
+            color: AppColors.textPrimary,
           ),
         ),
         actions: [
@@ -184,7 +154,7 @@ class _SellersScreenState extends State<SellersScreen> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: _kBlue,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Row(
@@ -212,12 +182,14 @@ class _SellersScreenState extends State<SellersScreen> {
       ),
 
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: _kBlue))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            )
           : _sellers.isEmpty
           ? _buildEmpty()
           : RefreshIndicator(
               onRefresh: _load,
-              color: _kBlue,
+              color: AppColors.primary,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -243,13 +215,18 @@ class _SellersScreenState extends State<SellersScreen> {
 
     return Row(
       children: [
-        _chip('${_sellers.length}', 'Cashiers', Icons.people_rounded, _kBlue),
+        _chip(
+          '${_sellers.length}',
+          'Cashiers',
+          Icons.people_rounded,
+          AppColors.primary,
+        ),
         const SizedBox(width: 10),
         _chip(
           '$totalOrders',
           "Today's Sales",
           Icons.receipt_long_rounded,
-          _kGreen,
+          AppColors.success,
         ),
         const SizedBox(width: 10),
         _chip(
@@ -260,7 +237,7 @@ class _SellersScreenState extends State<SellersScreen> {
               : '₦${totalRevenue.toStringAsFixed(0)}',
           "Today's Revenue",
           Icons.payments_rounded,
-          _kPurple,
+          AppColors.accentPurple,
         ),
       ],
     );
@@ -271,7 +248,7 @@ class _SellersScreenState extends State<SellersScreen> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: _kWhite,
+            color: AppColors.cardBg,
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
@@ -296,7 +273,10 @@ class _SellersScreenState extends State<SellersScreen> {
               ),
               Text(
                 label,
-                style: const TextStyle(color: _kInkMid, fontSize: 10),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
               ),
             ],
           ),
@@ -306,7 +286,7 @@ class _SellersScreenState extends State<SellersScreen> {
   // ── Seller card ────────────────────────────────────────────────────────────
   Widget _buildSellerCard(Seller s) {
     final idx = _sellers.indexOf(s);
-    final color = _kAvatarColors[idx % _kAvatarColors.length];
+    final color = AppColors.avatarColors[idx % AppColors.avatarColors.length];
     final initials = _initials(s.name);
     final stats = _stats[s.id] ?? {};
     final revenue = (stats['total_revenue'] ?? 0.0) as double;
@@ -318,11 +298,11 @@ class _SellersScreenState extends State<SellersScreen> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _kWhite,
+          color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -335,9 +315,9 @@ class _SellersScreenState extends State<SellersScreen> {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
-                border: Border.all(color: color.withOpacity(0.35), width: 2),
+                border: Border.all(color: color.withValues(alpha: 0.35), width: 2),
               ),
               child: Center(
                 child: Text(
@@ -364,7 +344,7 @@ class _SellersScreenState extends State<SellersScreen> {
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 15,
-                          color: _kInk,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -377,13 +357,13 @@ class _SellersScreenState extends State<SellersScreen> {
                       _statLabel(
                         Icons.receipt_outlined,
                         '$orders sale${orders == 1 ? '' : 's'} today',
-                        _kInkMid,
+                        AppColors.textSecondary,
                       ),
                       const SizedBox(width: 12),
                       _statLabel(
                         Icons.payments_outlined,
                         _fmt.format(revenue),
-                        _kGreen,
+                        AppColors.success,
                       ),
                     ],
                   ),
@@ -396,11 +376,15 @@ class _SellersScreenState extends State<SellersScreen> {
               children: [
                 _iconBtn(
                   Icons.edit_rounded,
-                  _kBlue,
+                  AppColors.primary,
                   () => _openForm(seller: s),
                 ),
                 const SizedBox(width: 8),
-                _iconBtn(Icons.person_off_rounded, _kRed, () => _deactivate(s)),
+                _iconBtn(
+                  Icons.person_off_rounded,
+                  AppColors.danger,
+                  () => _deactivate(s),
+                ),
               ],
             ),
           ],
@@ -412,7 +396,7 @@ class _SellersScreenState extends State<SellersScreen> {
   Widget _roleBadge(Seller s, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(6),
     ),
     child: Text(
@@ -443,7 +427,7 @@ class _SellersScreenState extends State<SellersScreen> {
           width: 34,
           height: 34,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(9),
           ),
           child: Icon(icon, color: color, size: 17),
@@ -461,12 +445,12 @@ class _SellersScreenState extends State<SellersScreen> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: _kBlue.withOpacity(0.08),
+              color: AppColors.primary.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.people_outline_rounded,
-              color: _kBlue,
+              color: AppColors.primary,
               size: 38,
             ),
           ),
@@ -476,14 +460,18 @@ class _SellersScreenState extends State<SellersScreen> {
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 20,
-              color: _kInk,
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
           const Text(
             'Add cashiers so you can track\nwho sold what in your store.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: _kInkMid, fontSize: 13, height: 1.6),
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 13,
+              height: 1.6,
+            ),
           ),
           const SizedBox(height: 28),
           GestureDetector(
@@ -491,11 +479,11 @@ class _SellersScreenState extends State<SellersScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
               decoration: BoxDecoration(
-                color: _kBlue,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: _kBlue.withOpacity(0.3),
+                    color: AppColors.primary.withValues(alpha: 0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -611,7 +599,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
     return Container(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottom),
       decoration: const BoxDecoration(
-        color: _kWhite,
+        color: AppColors.cardBg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SingleChildScrollView(
@@ -624,7 +612,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: _kInkSoft,
+                  color: AppColors.textSoft,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -634,7 +622,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
             Text(
               _isEditing ? 'Edit Cashier' : 'Add New Cashier',
               style: const TextStyle(
-                color: _kInk,
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
               ),
@@ -644,7 +632,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
               _isEditing
                   ? 'Update details for ${widget.seller!.name}'
                   : 'Fill in the details below',
-              style: const TextStyle(color: _kInkMid, fontSize: 13),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
             ),
             const SizedBox(height: 24),
 
@@ -654,7 +642,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
             TextField(
               controller: _nameCtrl,
               textCapitalization: TextCapitalization.words,
-              style: const TextStyle(color: _kInk, fontSize: 14),
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
               decoration: _inputDecor(
                 hint: 'e.g. Amaka Okafor',
                 icon: Icons.person_rounded,
@@ -684,20 +672,20 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
               maxLength: 4,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               style: const TextStyle(
-                color: _kInk,
+                color: AppColors.textPrimary,
                 fontSize: 22,
                 letterSpacing: 10,
               ),
               decoration: InputDecoration(
                 hintText: '• • • •',
-                hintStyle: TextStyle(
-                  color: _kInkSoft,
+                hintStyle: const TextStyle(
+                  color: AppColors.textSoft,
                   letterSpacing: 6,
                   fontSize: 16,
                 ),
                 prefixIcon: const Icon(
                   Icons.lock_rounded,
-                  color: _kInkMid,
+                  color: AppColors.textSecondary,
                   size: 18,
                 ),
                 suffixIcon: GestureDetector(
@@ -706,13 +694,13 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
                     _pinVisible
                         ? Icons.visibility_off_rounded
                         : Icons.visibility_rounded,
-                    color: _kInkMid,
+                    color: AppColors.textSecondary,
                     size: 18,
                   ),
                 ),
                 counterText: '',
                 filled: true,
-                fillColor: _kBg,
+                fillColor: AppColors.background,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 14,
@@ -724,7 +712,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: _kBlue.withOpacity(0.5),
+                    color: AppColors.primary.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                 ),
@@ -738,13 +726,13 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
                 children: [
                   const Icon(
                     Icons.error_outline_rounded,
-                    color: _kRed,
+                    color: AppColors.danger,
                     size: 14,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     _error,
-                    style: const TextStyle(color: _kRed, fontSize: 12),
+                    style: const TextStyle(color: AppColors.danger, fontSize: 12),
                   ),
                 ],
               ),
@@ -759,8 +747,8 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
               child: ElevatedButton(
                 onPressed: _saving ? null : _save,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _kBlue,
-                  disabledBackgroundColor: _kInkSoft,
+                  backgroundColor: AppColors.primary,
+                  disabledBackgroundColor: AppColors.textSoft,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -800,22 +788,28 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 11),
           decoration: BoxDecoration(
-            color: selected ? _kBlue.withOpacity(0.08) : _kBg,
+            color: selected
+                ? AppColors.primary.withValues(alpha: 0.08)
+                : AppColors.background,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: selected ? _kBlue : _kInkSoft,
+              color: selected ? AppColors.primary : AppColors.textSoft,
               width: selected ? 1.5 : 1,
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: selected ? _kBlue : _kInkMid, size: 16),
+              Icon(
+                icon,
+                color: selected ? AppColors.primary : AppColors.textSecondary,
+                size: 16,
+              ),
               const SizedBox(width: 6),
               Text(
                 label,
                 style: TextStyle(
-                  color: selected ? _kBlue : _kInkMid,
+                  color: selected ? AppColors.primary : AppColors.textSecondary,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                   fontSize: 13,
                 ),
@@ -832,7 +826,7 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
     child: Text(
       text,
       style: const TextStyle(
-        color: _kInkMid,
+        color: AppColors.textSecondary,
         fontSize: 12,
         fontWeight: FontWeight.w600,
       ),
@@ -842,10 +836,10 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
   InputDecoration _inputDecor({required String hint, required IconData icon}) =>
       InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: _kInkSoft, fontSize: 14),
-        prefixIcon: Icon(icon, color: _kInkMid, size: 18),
+        hintStyle: const TextStyle(color: AppColors.textSoft, fontSize: 14),
+        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
         filled: true,
-        fillColor: _kBg,
+        fillColor: AppColors.background,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 14,
@@ -856,7 +850,10 @@ class _SellerFormSheetState extends State<_SellerFormSheet> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: _kBlue.withOpacity(0.5), width: 1.5),
+          borderSide: BorderSide(
+            color: AppColors.primary.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
       );
 }
@@ -948,7 +945,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.86,
       decoration: const BoxDecoration(
-        color: _kWhite,
+        color: AppColors.cardBg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -961,7 +958,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: _kInkSoft,
+                  color: AppColors.textSoft,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -978,10 +975,10 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                   width: 58,
                   height: 58,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: color.withOpacity(0.35),
+                      color: color.withValues(alpha: 0.35),
                       width: 2,
                     ),
                   ),
@@ -1006,7 +1003,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 18,
-                          color: _kInk,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 3),
@@ -1016,7 +1013,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -1042,7 +1039,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
             child: Container(
               height: 38,
               decoration: BoxDecoration(
-                color: _kBg,
+                color: AppColors.background,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -1063,14 +1060,16 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                         duration: const Duration(milliseconds: 180),
                         margin: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                          color: active ? _kBlue : Colors.transparent,
+                          color: active ? AppColors.primary : Colors.transparent,
                           borderRadius: BorderRadius.circular(7),
                         ),
                         child: Center(
                           child: Text(
                             labels[p]!,
                             style: TextStyle(
-                              color: active ? Colors.white : _kInkMid,
+                              color: active
+                                  ? Colors.white
+                                  : AppColors.textSecondary,
                               fontSize: 11,
                               fontWeight: active
                                   ? FontWeight.w700
@@ -1089,7 +1088,9 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
 
           if (_loading)
             const Expanded(
-              child: Center(child: CircularProgressIndicator(color: _kBlue)),
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              ),
             )
           else ...[
             // KPI row
@@ -1097,33 +1098,36 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  _kpi(_fmt.format(revenue), 'Revenue', _kBlue),
+                  _kpi(_fmt.format(revenue), 'Revenue', AppColors.primary),
                   const SizedBox(width: 10),
-                  _kpi('$orders', 'Sales', _kGreen),
+                  _kpi('$orders', 'Sales', AppColors.success),
                   const SizedBox(width: 10),
-                  _kpi('$items', 'Items Sold', _kOrange),
+                  _kpi('$items', 'Items Sold', AppColors.warning),
                 ],
               ),
             ),
             const SizedBox(height: 14),
-            const Divider(height: 1, color: _kBorder),
+            const Divider(height: 1, color: AppColors.border),
 
             // Sales list
             Expanded(
               child: _sales.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.receipt_long_outlined,
-                            color: _kInkSoft,
+                            color: AppColors.textSoft,
                             size: 48,
                           ),
-                          const SizedBox(height: 12),
-                          const Text(
+                          SizedBox(height: 12),
+                          Text(
                             'No sales in this period',
-                            style: TextStyle(color: _kInkMid, fontSize: 14),
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -1132,7 +1136,7 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                       itemCount: _sales.length,
                       separatorBuilder: (_, __) =>
-                          const Divider(height: 1, color: _kBorder),
+                          const Divider(height: 1, color: AppColors.border),
                       itemBuilder: (_, i) {
                         final sale = _sales[i];
                         final total = sale['total'] as double;
@@ -1150,12 +1154,12 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                             width: 42,
                             height: 42,
                             decoration: BoxDecoration(
-                              color: _kBlue.withOpacity(0.07),
+                              color: AppColors.primary.withValues(alpha: 0.07),
                               borderRadius: BorderRadius.circular(11),
                             ),
                             child: const Icon(
                               Icons.receipt_rounded,
-                              color: _kBlue,
+                              color: AppColors.primary,
                               size: 20,
                             ),
                           ),
@@ -1164,20 +1168,20 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: _kInk,
+                              color: AppColors.textPrimary,
                             ),
                           ),
                           subtitle: Text(
                             '${sale['item_count']} item${(sale['item_count'] as int) == 1 ? '' : 's'}  ·  $time',
                             style: const TextStyle(
-                              color: _kInkMid,
+                              color: AppColors.textSecondary,
                               fontSize: 11,
                             ),
                           ),
                           trailing: Text(
                             _fmt.format(total),
                             style: const TextStyle(
-                              color: _kGreen,
+                              color: AppColors.success,
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -1196,9 +1200,9 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.07),
+        color: color.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -1212,7 +1216,10 @@ class _SellerDetailSheetState extends State<_SellerDetailSheet> {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(color: _kInkMid, fontSize: 10)),
+          Text(
+            label,
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
+          ),
         ],
       ),
     ),

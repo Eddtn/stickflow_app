@@ -1,12 +1,3 @@
-// lib/services/backup_service.dart
-//
-// Handles all backup and restore operations.
-// Export  → copies the SQLite .db file into a timestamped .stockflow_backup file
-//            then shares it via the native share sheet.
-// Import  → user picks a .stockflow_backup file, it replaces the current DB,
-//            and the app reloads cleanly.
-// CSV     → exports all products and all sales as two separate CSV strings
-//            wrapped in a single shareable text file.
 
 import 'dart:io';
 import 'dart:convert';
@@ -69,7 +60,7 @@ class BackupService {
   /// Returns a [RestoreResult] describing success or failure.
   Future<RestoreResult> restoreDatabase() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.any,
         allowMultiple: false,
       );

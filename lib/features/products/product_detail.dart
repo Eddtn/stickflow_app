@@ -19,10 +19,10 @@ class ProductDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
-          children: const [
+          children: [
             _ProductHeaderCard(),
             SizedBox(height: 12),
             _StatsRow(),
@@ -63,7 +63,7 @@ class _ProductHeaderCard extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.inventory_2_outlined, size: 32),
@@ -86,7 +86,7 @@ class _ProductHeaderCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
@@ -219,7 +219,7 @@ class _ActionButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -242,8 +242,8 @@ class _TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         _TxTile(title: "Stock In", qty: "+10"),
         _TxTile(title: "Stock Out", qty: "-2"),
         _TxTile(title: "Stock In", qty: "+5"),

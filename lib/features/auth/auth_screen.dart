@@ -1,27 +1,9 @@
-// lib/screens/auth_setup_screen.dart
-//
-// Security Settings screen.
-// • Enable / disable app lock
-// • Choose auth method: Biometric, Passcode, or Both
-// • Set / change / remove passcode
-// • Test authentication
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/services/auth_service.dart';
 import 'lock_screen.dart';
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-const _kBg = Color(0xFF0A0F1E);
-const _kSurface = Color(0xFF141B2D);
-const _kCard = Color(0xFF1C2539);
-const _kAccent = Color(0xFF00E5A0);
-const _kBlue = Color(0xFF0066FF);
-const _kDanger = Color(0xFFFF5370);
-const _kWarning = Color(0xFFFFB547);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
 
 class AuthSetupScreen extends StatefulWidget {
   const AuthSetupScreen({super.key});
@@ -69,7 +51,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
       }
       await _svc.setAuthEnabled(true);
       setState(() => _authEnabled = true);
-      _showSnack('App lock enabled ✅', _kAccent);
+      _showSnack('App lock enabled ✅', AppDarkColors.accent);
     } else {
       // Confirm before disabling
       final confirm = await _confirmDialog(
@@ -77,7 +59,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         message:
             'Anyone with access to this device will be able to open StockFlow. Disable anyway?',
         confirmLabel: 'Disable',
-        confirmColor: _kDanger,
+        confirmColor: AppDarkColors.danger,
       );
       if (confirm != true) return;
       await _svc.disableAuth();
@@ -85,7 +67,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         _authEnabled = false;
         _hasPasscode = false;
       });
-      _showSnack('App lock disabled', _kWarning);
+      _showSnack('App lock disabled', AppDarkColors.warning);
     }
   }
 
@@ -123,7 +105,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
       if (verified != true) return;
     }
     await _showPasscodeSetup(isNew: false);
-    _showSnack('Passcode updated ✅', _kAccent);
+    _showSnack('Passcode updated ✅', AppDarkColors.accent);
   }
 
   // ── Remove passcode ───────────────────────────────────────────────────────
@@ -132,7 +114,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
       title: 'Remove Passcode',
       message: 'This will also disable biometric auth if enabled.',
       confirmLabel: 'Remove',
-      confirmColor: _kDanger,
+      confirmColor: AppDarkColors.danger,
     );
     if (confirm != true) return;
     await _svc.disableAuth();
@@ -140,7 +122,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
       _hasPasscode = false;
       _authEnabled = false;
     });
-    _showSnack('Passcode removed', _kWarning);
+    _showSnack('Passcode removed', AppDarkColors.warning);
   }
 
   // ── Test auth ─────────────────────────────────────────────────────────────
@@ -151,7 +133,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         builder: (_) => LockScreen(
           onAuthenticated: () {
             Navigator.pop(context);
-            _showSnack('Authentication successful! 🎉', _kAccent);
+            _showSnack('Authentication successful! 🎉', AppDarkColors.accent);
           },
         ),
       ),
@@ -162,30 +144,34 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppDarkColors.bg,
+      ),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         appBar: AppBar(
-          backgroundColor: _kBg,
+          backgroundColor: AppDarkColors.bg,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: _kTextDim,
+              color: AppDarkColors.textDim,
             ),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             'Security',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 18,
             ),
           ),
         ),
         body: _loading
-            ? const Center(child: CircularProgressIndicator(color: _kAccent))
+            ? const Center(
+                child: CircularProgressIndicator(color: AppDarkColors.accent),
+              )
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -211,10 +197,13 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
     padding: const EdgeInsets.all(18),
     decoration: BoxDecoration(
       gradient: LinearGradient(
-        colors: [_kBlue.withOpacity(0.15), _kAccent.withOpacity(0.08)],
+        colors: [
+          AppDarkColors.blue.withOpacity(0.15),
+          AppDarkColors.accent.withOpacity(0.08),
+        ],
       ),
       borderRadius: BorderRadius.circular(18),
-      border: Border.all(color: _kBlue.withOpacity(0.25)),
+      border: Border.all(color: AppDarkColors.blue.withOpacity(0.25)),
     ),
     child: Row(
       children: [
@@ -222,12 +211,12 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
           width: 52,
           height: 52,
           decoration: BoxDecoration(
-            color: _kBlue.withOpacity(0.15),
+            color: AppDarkColors.blue.withOpacity(0.15),
             shape: BoxShape.circle,
           ),
           child: Icon(
             _authEnabled ? Icons.lock_rounded : Icons.lock_open_rounded,
-            color: _authEnabled ? _kAccent : _kTextDim,
+            color: _authEnabled ? AppDarkColors.accent : AppDarkColors.textDim,
             size: 26,
           ),
         ),
@@ -239,7 +228,9 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               Text(
                 _authEnabled ? 'App Lock is ON' : 'App Lock is OFF',
                 style: TextStyle(
-                  color: _authEnabled ? _kAccent : _kTextDim,
+                  color: _authEnabled
+                      ? AppDarkColors.accent
+                      : AppDarkColors.textDim,
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
                 ),
@@ -250,7 +241,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
                     ? 'StockFlow is protected. Authentication required on every open.'
                     : 'Enable app lock to protect your business data.',
                 style: const TextStyle(
-                  color: _kTextDim,
+                  color: AppDarkColors.textDim,
                   fontSize: 12,
                   height: 1.4,
                 ),
@@ -270,12 +261,13 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: (_authEnabled ? _kAccent : _kTextDim).withOpacity(0.1),
+            color: (_authEnabled ? AppDarkColors.accent : AppDarkColors.textDim)
+                .withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             Icons.security_rounded,
-            color: _authEnabled ? _kAccent : _kTextDim,
+            color: _authEnabled ? AppDarkColors.accent : AppDarkColors.textDim,
             size: 22,
           ),
         ),
@@ -287,7 +279,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               Text(
                 'App Lock',
                 style: TextStyle(
-                  color: _kText,
+                  color: AppDarkColors.text,
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
                 ),
@@ -295,7 +287,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               SizedBox(height: 3),
               Text(
                 'Require authentication to open StockFlow',
-                style: TextStyle(color: _kTextDim, fontSize: 12),
+                style: TextStyle(color: AppDarkColors.textDim, fontSize: 12),
               ),
             ],
           ),
@@ -303,10 +295,10 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         Switch(
           value: _authEnabled,
           onChanged: _toggleAuth,
-          activeColor: _kAccent,
+          activeColor: AppDarkColors.accent,
           trackColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.selected)
-                ? _kAccent.withOpacity(0.3)
+                ? AppDarkColors.accent.withOpacity(0.3)
                 : Colors.white12,
           ),
         ),
@@ -346,20 +338,23 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               ),
             ],
             if (!_bioAvailable)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
+              const Padding(
+                padding: EdgeInsets.only(top: 12),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.info_outline_rounded,
-                      color: _kTextDim,
+                      color: AppDarkColors.textDim,
                       size: 14,
                     ),
-                    const SizedBox(width: 6),
-                    const Expanded(
+                    SizedBox(width: 6),
+                    Expanded(
                       child: Text(
                         'Biometric not available on this device',
-                        style: TextStyle(color: _kTextDim, fontSize: 11),
+                        style: TextStyle(
+                          color: AppDarkColors.textDim,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
                   ],
@@ -384,7 +379,11 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
-            Icon(icon, color: selected ? _kAccent : _kTextDim, size: 22),
+            Icon(
+              icon,
+              color: selected ? AppDarkColors.accent : AppDarkColors.textDim,
+              size: 22,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -393,14 +392,19 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
                   Text(
                     label,
                     style: TextStyle(
-                      color: selected ? _kText : _kTextDim,
+                      color: selected
+                          ? AppDarkColors.text
+                          : AppDarkColors.textDim,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: _kTextDim, fontSize: 11),
+                    style: const TextStyle(
+                      color: AppDarkColors.textDim,
+                      fontSize: 11,
+                    ),
                   ),
                 ],
               ),
@@ -411,9 +415,9 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               height: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: selected ? _kAccent : Colors.transparent,
+                color: selected ? AppDarkColors.accent : Colors.transparent,
                 border: Border.all(
-                  color: selected ? _kAccent : _kTextDim,
+                  color: selected ? AppDarkColors.accent : AppDarkColors.textDim,
                   width: 2,
                 ),
               ),
@@ -439,7 +443,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
             _settingsRow(
               icon: Icons.edit_rounded,
               label: _hasPasscode ? 'Change Passcode' : 'Set Passcode',
-              color: _kAccent,
+              color: AppDarkColors.accent,
               onTap: _changePasscode,
             ),
             if (_hasPasscode) ...[
@@ -447,7 +451,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               _settingsRow(
                 icon: Icons.delete_outline_rounded,
                 label: 'Remove Passcode',
-                color: _kDanger,
+                color: AppDarkColors.danger,
                 onTap: _removePasscode,
               ),
             ],
@@ -494,13 +498,16 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
     height: 52,
     child: OutlinedButton.icon(
       onPressed: _testAuth,
-      icon: const Icon(Icons.play_arrow_rounded, color: _kAccent),
+      icon: const Icon(Icons.play_arrow_rounded, color: AppDarkColors.accent),
       label: const Text(
         'Test Authentication',
-        style: TextStyle(color: _kAccent, fontWeight: FontWeight.w700),
+        style: TextStyle(
+          color: AppDarkColors.accent,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(color: _kAccent.withOpacity(0.4)),
+        side: BorderSide(color: AppDarkColors.accent.withOpacity(0.4)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     ),
@@ -510,7 +517,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
   Widget _card({required Widget child}) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     decoration: BoxDecoration(
-      color: _kCard,
+      color: AppDarkColors.card,
       borderRadius: BorderRadius.circular(18),
       border: Border.all(color: Colors.white.withOpacity(0.05)),
     ),
@@ -520,7 +527,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
   Widget _sectionLabel(String text) => Text(
     text,
     style: const TextStyle(
-      color: _kTextDim,
+      color: AppDarkColors.textDim,
       fontSize: 11,
       fontWeight: FontWeight.w700,
       letterSpacing: 1.5,
@@ -547,20 +554,26 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
   }) => showDialog<bool>(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: _kCard,
+      backgroundColor: AppDarkColors.card,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
         title,
-        style: const TextStyle(color: _kText, fontWeight: FontWeight.w700),
+        style: const TextStyle(
+          color: AppDarkColors.text,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       content: Text(
         message,
-        style: const TextStyle(color: _kTextDim, height: 1.5),
+        style: const TextStyle(color: AppDarkColors.textDim, height: 1.5),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancel', style: TextStyle(color: _kTextDim)),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: AppDarkColors.textDim),
+          ),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
@@ -659,7 +672,7 @@ class _PasscodeSetupSheetState extends State<_PasscodeSetupSheet> {
         24 + MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: const BoxDecoration(
-        color: _kSurface,
+        color: AppDarkColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -677,7 +690,7 @@ class _PasscodeSetupSheetState extends State<_PasscodeSetupSheet> {
           Text(
             _prompt,
             style: const TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 17,
             ),
@@ -695,9 +708,9 @@ class _PasscodeSetupSheetState extends State<_PasscodeSetupSheet> {
                 height: 16,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: filled ? _kAccent : Colors.transparent,
+                  color: filled ? AppDarkColors.accent : Colors.transparent,
                   border: Border.all(
-                    color: filled ? _kAccent : _kTextDim,
+                    color: filled ? AppDarkColors.accent : AppDarkColors.textDim,
                     width: 2,
                   ),
                 ),
@@ -706,7 +719,10 @@ class _PasscodeSetupSheetState extends State<_PasscodeSetupSheet> {
           ),
           if (_error.isNotEmpty) ...[
             const SizedBox(height: 10),
-            Text(_error, style: const TextStyle(color: _kDanger, fontSize: 12)),
+            Text(
+              _error,
+              style: const TextStyle(color: AppDarkColors.danger, fontSize: 12),
+            ),
           ],
           const SizedBox(height: 24),
           // Keypad
@@ -727,21 +743,21 @@ class _PasscodeSetupSheetState extends State<_PasscodeSetupSheet> {
                     child: Container(
                       width: 64,
                       height: 64,
-                      decoration: BoxDecoration(
-                        color: _kCard,
+                      decoration: const BoxDecoration(
+                        color: AppDarkColors.card,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: k == 'del'
                             ? const Icon(
                                 Icons.backspace_outlined,
-                                color: _kTextDim,
+                                color: AppDarkColors.textDim,
                                 size: 20,
                               )
                             : Text(
                                 k,
                                 style: const TextStyle(
-                                  color: _kText,
+                                  color: AppDarkColors.text,
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -812,7 +828,7 @@ class _PasscodeVerifySheetState extends State<_PasscodeVerifySheet> {
         24 + MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: const BoxDecoration(
-        color: _kSurface,
+        color: AppDarkColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -830,7 +846,7 @@ class _PasscodeVerifySheetState extends State<_PasscodeVerifySheet> {
           const Text(
             'Enter current passcode',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 17,
             ),
@@ -847,9 +863,9 @@ class _PasscodeVerifySheetState extends State<_PasscodeVerifySheet> {
                 height: 16,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: filled ? _kAccent : Colors.transparent,
+                  color: filled ? AppDarkColors.accent : Colors.transparent,
                   border: Border.all(
-                    color: filled ? _kAccent : _kTextDim,
+                    color: filled ? AppDarkColors.accent : AppDarkColors.textDim,
                     width: 2,
                   ),
                 ),
@@ -858,7 +874,10 @@ class _PasscodeVerifySheetState extends State<_PasscodeVerifySheet> {
           ),
           if (_error.isNotEmpty) ...[
             const SizedBox(height: 10),
-            Text(_error, style: const TextStyle(color: _kDanger, fontSize: 12)),
+            Text(
+              _error,
+              style: const TextStyle(color: AppDarkColors.danger, fontSize: 12),
+            ),
           ],
           const SizedBox(height: 24),
           ...[
@@ -878,21 +897,21 @@ class _PasscodeVerifySheetState extends State<_PasscodeVerifySheet> {
                     child: Container(
                       width: 64,
                       height: 64,
-                      decoration: BoxDecoration(
-                        color: _kCard,
+                      decoration: const BoxDecoration(
+                        color: AppDarkColors.card,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: k == 'del'
                             ? const Icon(
                                 Icons.backspace_outlined,
-                                color: _kTextDim,
+                                color: AppDarkColors.textDim,
                                 size: 20,
                               )
                             : Text(
                                 k,
                                 style: const TextStyle(
-                                  color: _kText,
+                                  color: AppDarkColors.text,
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                 ),

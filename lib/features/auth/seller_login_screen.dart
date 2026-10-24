@@ -1,22 +1,14 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/database/database_helper.dart';
 import 'package:stockflow/features/bottom_navigation_screen/bottom_nav_screen.dart';
 import 'package:stockflow/features/dashboard/ashboard_screen.dart';
-import 'package:stockflow/features/posscreen/posscreen.dart';
 import 'package:stockflow/features/sales_history/cashier_screen.dart';
 import 'package:stockflow/models/seller.dart';
 import 'package:stockflow/services/seller_session.dart';
-
-const _kBg = Color(0xFF0A0F1E);
-const _kCard = Color(0xFF1C2539);
-const _kSurface = Color(0xFF141B2D);
-const _kAccent = Color(0xFF0066FF);
-const _kGreen = Color(0xFF00E5A0);
-const _kDanger = Color(0xFFFF5370);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
 
 class SellerLoginScreen extends StatefulWidget {
   const SellerLoginScreen({super.key});
@@ -108,12 +100,16 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppDarkColors.bg,
+      ),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         body: SafeArea(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: _kAccent))
+              ? const Center(
+                  child: CircularProgressIndicator(color: AppDarkColors.blue),
+                )
               : _selected == null
               ? _buildSellerPicker()
               : _buildPinEntry(),
@@ -149,7 +145,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         const Text(
           'Who is selling today?',
           style: TextStyle(
-            color: _kText,
+            color: AppDarkColors.text,
             fontSize: 22,
             fontWeight: FontWeight.w800,
           ),
@@ -157,7 +153,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         const SizedBox(height: 6),
         const Text(
           'Select your name to continue',
-          style: TextStyle(color: _kTextDim, fontSize: 14),
+          style: TextStyle(color: AppDarkColors.textDim, fontSize: 14),
         ),
         const SizedBox(height: 32),
 
@@ -182,14 +178,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
   }
 
   Widget _sellerCard(Seller s) {
-    final colors = [
-      _kAccent,
-      _kGreen,
-      const Color(0xFFFFB547),
-      const Color(0xFFFF85A2),
-      const Color(0xFF7C9FFF),
-      const Color(0xFFB47FFF),
-    ];
+    const colors = AppDarkColors.avatarColors;
     final idx = _sellers.indexOf(s) % colors.length;
     final color = colors[idx];
     final initials = s.name
@@ -203,9 +192,9 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
       onTap: () => _selectSeller(s),
       child: Container(
         decoration: BoxDecoration(
-          color: _kCard,
+          color: AppDarkColors.card,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +203,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -233,7 +222,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
               s.name,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: _kText,
+                color: AppDarkColors.text,
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
               ),
@@ -242,7 +231,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
@@ -265,12 +254,16 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.group_off_rounded, color: _kTextDim, size: 56),
+          const Icon(
+            Icons.group_off_rounded,
+            color: AppDarkColors.textDim,
+            size: 56,
+          ),
           const SizedBox(height: 16),
           const Text(
             'No sellers added yet',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
@@ -279,7 +272,11 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
           const Text(
             'Go to Settings → Sellers\nto add cashiers',
             textAlign: TextAlign.center,
-            style: TextStyle(color: _kTextDim, fontSize: 13, height: 1.5),
+            style: TextStyle(
+              color: AppDarkColors.textDim,
+              fontSize: 13,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 24),
           // Still allow owner to proceed without sellers
@@ -297,7 +294,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
-                color: _kAccent,
+                color: AppDarkColors.blue,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text(
@@ -332,20 +329,20 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: _kCard,
+                  color: AppDarkColors.card,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Row(
                   children: [
                     Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: _kTextDim,
+                      color: AppDarkColors.textDim,
                       size: 14,
                     ),
                     SizedBox(width: 4),
                     Text(
                       'Back',
-                      style: TextStyle(color: _kTextDim, fontSize: 13),
+                      style: TextStyle(color: AppDarkColors.textDim, fontSize: 13),
                     ),
                   ],
                 ),
@@ -361,7 +358,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         Text(
           _selected!.name,
           style: const TextStyle(
-            color: _kText,
+            color: AppDarkColors.text,
             fontSize: 20,
             fontWeight: FontWeight.w800,
           ),
@@ -369,7 +366,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         const SizedBox(height: 4),
         Text(
           _selected!.isOwner ? 'Owner' : 'Cashier',
-          style: const TextStyle(color: _kTextDim, fontSize: 13),
+          style: const TextStyle(color: AppDarkColors.textDim, fontSize: 13),
         ),
         const SizedBox(height: 32),
 
@@ -385,9 +382,9 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
               height: 18,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: filled ? _kAccent : Colors.transparent,
+                color: filled ? AppDarkColors.blue : Colors.transparent,
                 border: Border.all(
-                  color: filled ? _kAccent : _kTextDim,
+                  color: filled ? AppDarkColors.blue : AppDarkColors.textDim,
                   width: 2,
                 ),
               ),
@@ -398,7 +395,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         Text(
           _error.isEmpty ? 'Enter your PIN' : _error,
           style: TextStyle(
-            color: _error.isEmpty ? _kTextDim : _kDanger,
+            color: _error.isEmpty ? AppDarkColors.textDim : AppDarkColors.danger,
             fontSize: 13,
           ),
         ),
@@ -430,11 +427,11 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: _kCard,
+                            color: AppDarkColors.card,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -444,13 +441,13 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                             child: k == 'del'
                                 ? const Icon(
                                     Icons.backspace_outlined,
-                                    color: _kTextDim,
+                                    color: AppDarkColors.textDim,
                                     size: 22,
                                   )
                                 : Text(
                                     k,
                                     style: const TextStyle(
-                                      color: _kText,
+                                      color: AppDarkColors.text,
                                       fontSize: 24,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -471,12 +468,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
   }
 
   Widget _buildAvatar(Seller s) {
-    final colors = [
-      _kAccent,
-      _kGreen,
-      const Color(0xFFFFB547),
-      const Color(0xFFFF85A2),
-    ];
+    const colors = AppDarkColors.avatarColors;
     final color = colors[_sellers.indexOf(s) % colors.length];
     final initials = s.name
         .trim()
@@ -488,9 +480,9 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         shape: BoxShape.circle,
-        border: Border.all(color: color.withOpacity(0.4), width: 2),
+        border: Border.all(color: color.withValues(alpha: 0.4), width: 2),
       ),
       child: Center(
         child: Text(

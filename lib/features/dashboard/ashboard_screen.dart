@@ -1,7 +1,15 @@
 
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/database/database_helper.dart';
 import 'package:stockflow/features/auth/lock_screen.dart';
 import 'package:stockflow/features/backUp_screen/backup_screen.dart';
@@ -23,21 +31,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // ── colours ──────────────────────────────────────────────────────────────
-  static const _blue = Color(0xFF0057FF);
-  static const _blueSoft = Color(0xFFEBF1FF);
-  static const _green = Color(0xFF00C17C);
-  static const _greenSoft = Color(0xFFE6FAF3);
-  static const _orange = Color(0xFFFF8C00);
-  static const _orangeSoft = Color(0xFFFFF3E0);
-  static const _purple = Color(0xFF7C3AED);
-  static const _purpleSoft = Color(0xFFF3EDFF);
-  static const _red = Color(0xFFE53935);
-  static const _ink = Color(0xFF0D1B2A);
-  static const _inkMid = Color(0xFF4A5568);
-  static const _bg = Color(0xFFF4F7FB);
-  static const _white = Colors.white;
-
   // ── state ─────────────────────────────────────────────────────────────────
   bool _loading = true;
   String _error = '';
@@ -169,14 +162,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: _bg,
+        backgroundColor: AppColors.background,
         body: SafeArea(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: _blue))
+              ? const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                )
               : _error.isNotEmpty
               ? _buildError()
               : RefreshIndicator(
-                  color: _blue,
+                  color: AppColors.primary,
                   onRefresh: _load,
                   child: CustomScrollView(
                     slivers: [
@@ -203,7 +198,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, color: _red, size: 48),
+          const Icon(Icons.error_outline, color: AppColors.danger, size: 48),
           const SizedBox(height: 12),
           const Text(
             'Failed to load dashboard',
@@ -212,13 +207,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 6),
           Text(
             _error,
-            style: const TextStyle(color: _inkMid, fontSize: 12),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _load,
-            style: ElevatedButton.styleFrom(backgroundColor: _blue),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
             child: const Text('Retry', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -241,13 +236,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
-                    color: _ink,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   DateFormat('EEEE, d MMMM yyyy').format(DateTime.now()),
-                  style: const TextStyle(color: _inkMid, fontSize: 13),
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
@@ -267,7 +265,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 14,
                     height: 14,
                     decoration: const BoxDecoration(
-                      color: _red,
+                      color: AppColors.danger,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -291,7 +289,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: 38,
               height: 38,
               decoration: const BoxDecoration(
-                color: _blue,
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
               child: const Center(
@@ -317,17 +315,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       width: 38,
       height: 38,
       decoration: BoxDecoration(
-        color: _white,
+        color: AppColors.cardBg,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Icon(icon, size: 20, color: _ink),
+      child: Icon(icon, size: 20, color: AppColors.textPrimary),
     ),
   );
 
@@ -345,7 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: _blue.withOpacity(0.35),
+            color: AppColors.primary.withValues(alpha: 0.35),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -367,7 +365,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -392,7 +390,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          Container(height: 1, color: Colors.white.withOpacity(0.15)),
+          Container(height: 1, color: Colors.white.withValues(alpha: 0.15)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -429,22 +427,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             'Products',
             '$_totalProducts',
             Icons.inventory_2_rounded,
-            _blue,
-            _blueSoft,
+            AppColors.primary,
+            AppColors.primarySoft,
           ),
           _kpiCard(
             'Low Stock',
             '$_lowStockCount',
             Icons.warning_amber_rounded,
-            _orange,
-            _orangeSoft,
+            AppColors.warning,
+            AppColors.warningSoft,
           ),
           _kpiCard(
             "Today's Orders",
             '$_todayOrders',
             Icons.shopping_cart_rounded,
-            _green,
-            _greenSoft,
+            AppColors.success,
+            AppColors.successSoft,
           ),
           _kpiCard(
             'Inventory Value',
@@ -452,8 +450,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ? '₦${(_inventoryValue / 1000000).toStringAsFixed(1)}M'
                 : '₦${(_inventoryValue / 1000).toStringAsFixed(0)}k',
             Icons.account_balance_wallet_rounded,
-            _purple,
-            _purpleSoft,
+            AppColors.accentPurple,
+            AppColors.accentPurpleSoft,
           ),
         ],
       ),
@@ -470,11 +468,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _white,
+        color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -498,10 +496,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: _ink,
+              color: AppColors.textPrimary,
             ),
           ),
-          Text(label, style: const TextStyle(fontSize: 11, color: _inkMid)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+          ),
         ],
       ),
     );
@@ -539,7 +540,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w700,
-                          color: isToday ? _blue : _inkMid,
+                          color: isToday
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
                         ),
                       ),
                     const SizedBox(height: 3),
@@ -552,8 +555,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: isToday
-                              ? [_blue, const Color(0xFF3399FF)]
-                              : [_blueSoft, _blueSoft],
+                              ? [AppColors.primary, const Color(0xFF3399FF)]
+                              : [AppColors.primarySoft, AppColors.primarySoft],
                         ),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -564,7 +567,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: isToday ? FontWeight.w700 : FontWeight.w400,
-                        color: isToday ? _blue : _inkMid,
+                        color: isToday
+                            ? AppColors.primary
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -586,14 +591,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 12),
           child: Center(
-            child: Text('No sales today yet', style: TextStyle(color: _inkMid)),
+            child: Text(
+              'No sales today yet',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
         ),
       );
     }
 
     final maxRev = _topItems.first.revenue;
-    const colors = [_blue, _green, _orange, _purple];
+    const colors = [
+      AppColors.primary,
+      AppColors.success,
+      AppColors.warning,
+      AppColors.accentPurple,
+    ];
 
     return _section(
       title: "Today's Top Products",
@@ -622,7 +635,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
-                                color: _ink,
+                                color: AppColors.textPrimary,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -643,14 +656,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: LinearProgressIndicator(
                           value: pct,
                           minHeight: 5,
-                          backgroundColor: const Color(0xFFEEF2F7),
+                          backgroundColor: AppColors.border,
                           valueColor: AlwaysStoppedAnimation(color),
                         ),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         '${item.qty} unit${item.qty == 1 ? '' : 's'} sold',
-                        style: const TextStyle(color: _inkMid, fontSize: 10),
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -668,14 +684,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return _section(
       title: 'Low Stock Alerts',
       icon: Icons.warning_amber_rounded,
-      iconColor: _lowStockCount > 0 ? _orange : _green,
+      iconColor: _lowStockCount > 0 ? AppColors.warning : AppColors.success,
       trailing: _lowStockCount > 0
           ? GestureDetector(
               onTap: () => _go(const LowStockScreen()),
               child: Text(
                 'View all $_lowStockCount →',
                 style: const TextStyle(
-                  color: _orange,
+                  color: AppColors.warning,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -683,13 +699,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             )
           : null,
       child: _lowStockItems.isEmpty
-          ? Row(
-              children: const [
-                Icon(Icons.check_circle_rounded, color: _green, size: 18),
+          ? const Row(
+              children: [
+                Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.success,
+                  size: 18,
+                ),
                 SizedBox(width: 8),
                 Text(
                   'All stock levels healthy!',
-                  style: TextStyle(color: _green, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: AppColors.success,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             )
@@ -698,15 +721,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 final stock = p['stock'] as int;
                 final threshold = (p['alert_threshold'] as int?) ?? 10;
                 final isOut = stock == 0;
-                final color = isOut ? _red : _orange;
+                final color = isOut ? AppColors.danger : AppColors.warning;
                 final label = isOut ? 'Out' : 'Low';
                 return Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.05),
+                    color: color.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: color.withOpacity(0.2)),
+                    border: Border.all(color: color.withValues(alpha: 0.2)),
                   ),
                   child: Row(
                     children: [
@@ -724,13 +747,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
-                                color: _ink,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                             Text(
                               '${p['brand']}  ·  $stock left',
                               style: const TextStyle(
-                                color: _inkMid,
+                                color: AppColors.textSecondary,
                                 fontSize: 11,
                               ),
                             ),
@@ -743,7 +766,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.12),
+                          color: color.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -765,80 +788,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // ── quick actions ─────────────────────────────────────────────────────────
   Widget _buildQuickActions() {
-    // final actions = [
-    //   _Action(
-    //     'Scan & Sell',
-    //     Icons.qr_code_scanner_rounded,
-    //     _blue,
-    //     () => _go(const PosScreen()),
-    //   ),
-    //   _Action(
-    //     'Products',
-    //     Icons.inventory_2_rounded,
-    //     _green,
-    //     () => _go(const ProductsScreen()),
-    //   ),
-    //   _Action(
-    //     'Sales',
-    //     Icons.receipt_long_rounded,
-    //     _purple,
-    //     () => _go(const SalesHistoryScreen()),
-    //   ),
-    //   _Action(
-    //     'Reports',
-    //     Icons.bar_chart_rounded,
-    //     _orange,
-    //     () => _go(const ReportsScreen()),
-    //   ),
-    //   _Action(
-    //     'Backup',
-    //     Icons.backup_rounded,
-    //     const Color(0xFF0099AA),
-    //     () => _go(const BackupScreen()),
-    //   ),
-    //   _Action(
-    //     'Alerts',
-    //     Icons.warning_amber_rounded,
-    //     _red,
-    //     () => _go(const LowStockScreen()),
-    //   ),
-    //   _Action(
-    //     'lock',
-    //     Icons.warning_amber_rounded,
-    //     _red,
-    //     () => _go(LockScreen(onAuthenticated: () {})),
-    //   ),
-    // ];
-
     final actions = [
       _Action(
         'Scan & Sell',
         Icons.qr_code_scanner_rounded,
-        _blue,
+        AppColors.primary,
         () => _go(const PosScreen()),
       ),
       _Action(
         'Stock In',
         Icons.arrow_downward_rounded,
-        _green,
+        AppColors.success,
         () => _go(const StockInScreen()),
       ), // NEW
       _Action(
         'Products',
         Icons.inventory_2_rounded,
-        const Color(0xFF0099AA),
+        AppColors.accentTeal,
         () => _go(const ProductsScreen()),
       ),
       _Action(
         'Sales',
         Icons.receipt_long_rounded,
-        _purple,
+        AppColors.accentPurple,
         () => _go(const SalesHistoryScreen()),
       ),
       _Action(
         'Sellers',
         Icons.group_rounded,
-        _orange,
+        AppColors.warning,
         () => _go(const SellersScreen()),
       ),
 
@@ -846,41 +824,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _Action(
           'Reports',
           Icons.bar_chart_rounded,
-          const Color(0xFFE53935),
+          AppColors.danger,
           () => _go(const ReportsScreen()),
         ),
       _Action(
         'Backup',
         Icons.backup_rounded,
-        const Color(0xFF0099AA),
+        AppColors.accentTeal,
         () => _go(const BackupScreen()),
       ),
 
-      // _Action(
-      //   'Settings',
-      //   Icons.settings_rounded,
-      //   const Color(0xFF4A5568),
-      //   () => _go(const SettingsScreen()),
-      // ),
       if (SellerSession.instance.canAccessSettings)
         _Action(
           'Settings',
           Icons.settings_rounded,
-          const Color(0xFF4A5568),
+          AppColors.textSecondary,
           () => _go(const SettingsScreen()),
         ),
 
       _Action(
         'Cashiers',
         Icons.people_rounded,
-        const Color(0xFF0099AA),
+        AppColors.accentTeal,
         () => _go(const SellersScreen()),
       ),
 
       _Action(
         'Stock In',
         Icons.arrow_downward_rounded,
-        const Color(0xFF0099AA),
+        AppColors.accentTeal,
         () => _go(const StockInScreen()),
       ),
     ];
@@ -901,9 +873,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: a.onTap,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: a.color.withOpacity(0.07),
+                    color: a.color.withValues(alpha: 0.07),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: a.color.withOpacity(0.18)),
+                    border: Border.all(color: a.color.withValues(alpha: 0.18)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -912,7 +884,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         width: 42,
                         height: 42,
                         decoration: BoxDecoration(
-                          color: a.color.withOpacity(0.12),
+                          color: a.color.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(a.icon, color: a.color, size: 22),
@@ -942,18 +914,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required String title,
     required IconData icon,
     required Widget child,
-    Color iconColor = _ink,
+    Color iconColor = AppColors.textPrimary,
     Widget? trailing,
   }) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: _white,
+        color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -971,7 +943,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: _ink,
+                  color: AppColors.textPrimary,
                 ),
               ),
               const Spacer(),

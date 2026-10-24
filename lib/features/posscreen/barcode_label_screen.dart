@@ -1,3 +1,4 @@
+
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -7,18 +8,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/database/database_helper.dart';
 import 'package:stockflow/features/products/product_model/prod_model.dart';
 import 'dart:io';
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-const _kBg = Color(0xFF0A0F1E);
-const _kSurface = Color(0xFF141B2D);
-const _kCard = Color(0xFF1C2539);
-const _kAccent = Color(0xFF00E5A0);
-const _kText = Color(0xFFEEF2FF);
-const _kTextDim = Color(0xFF8892A4);
-const _kDanger = Color(0xFFFF5370);
 
 enum _LabelSize { small, medium, large }
 
@@ -161,7 +154,9 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: isError ? _kDanger : _kAccent.withOpacity(0.9),
+        backgroundColor: isError
+            ? AppDarkColors.danger
+            : AppDarkColors.accent.withOpacity(0.9),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -206,23 +201,25 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark().copyWith(scaffoldBackgroundColor: _kBg),
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppDarkColors.bg,
+      ),
       child: Scaffold(
-        backgroundColor: _kBg,
+        backgroundColor: AppDarkColors.bg,
         appBar: AppBar(
-          backgroundColor: _kBg,
+          backgroundColor: AppDarkColors.bg,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: _kTextDim,
+              color: AppDarkColors.textDim,
             ),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             'Label Generator',
             style: TextStyle(
-              color: _kText,
+              color: AppDarkColors.text,
               fontWeight: FontWeight.w700,
               fontSize: 18,
             ),
@@ -236,14 +233,14 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: _kAccent.withOpacity(0.12),
+                  color: AppDarkColors.accent.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: _kAccent.withOpacity(0.3)),
+                  border: Border.all(color: AppDarkColors.accent.withOpacity(0.3)),
                 ),
                 child: Text(
                   '${_filtered.length} label${_filtered.length == 1 ? '' : 's'}',
                   style: const TextStyle(
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                   ),
@@ -253,7 +250,9 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           ],
         ),
         body: _loading
-            ? const Center(child: CircularProgressIndicator(color: _kAccent))
+            ? const Center(
+                child: CircularProgressIndicator(color: AppDarkColors.accent),
+              )
             : Column(
                 children: [
                   _buildControls(),
@@ -279,7 +278,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                 const Text(
                   'TYPE',
                   style: TextStyle(
-                    color: _kTextDim,
+                    color: AppDarkColors.textDim,
                     fontSize: 10,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w600,
@@ -289,7 +288,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                 Container(
                   height: 38,
                   decoration: BoxDecoration(
-                    color: _kCard,
+                    color: AppDarkColors.card,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -319,7 +318,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                 const Text(
                   'SIZE',
                   style: TextStyle(
-                    color: _kTextDim,
+                    color: AppDarkColors.textDim,
                     fontSize: 10,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w600,
@@ -329,7 +328,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                 Container(
                   height: 38,
                   decoration: BoxDecoration(
-                    color: _kCard,
+                    color: AppDarkColors.card,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -357,18 +356,22 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           duration: const Duration(milliseconds: 180),
           margin: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-            color: active ? _kAccent : Colors.transparent,
+            color: active ? AppDarkColors.accent : Colors.transparent,
             borderRadius: BorderRadius.circular(7),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 13, color: active ? _kBg : _kTextDim),
+              Icon(
+                icon,
+                size: 13,
+                color: active ? AppDarkColors.bg : AppDarkColors.textDim,
+              ),
               const SizedBox(width: 4),
               Text(
                 label,
                 style: TextStyle(
-                  color: active ? _kBg : _kTextDim,
+                  color: active ? AppDarkColors.bg : AppDarkColors.textDim,
                   fontSize: 11,
                   fontWeight: active ? FontWeight.w700 : FontWeight.w500,
                 ),
@@ -389,14 +392,14 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           duration: const Duration(milliseconds: 180),
           margin: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-            color: active ? _kAccent : Colors.transparent,
+            color: active ? AppDarkColors.accent : Colors.transparent,
             borderRadius: BorderRadius.circular(7),
           ),
           child: Center(
             child: Text(
               label,
               style: TextStyle(
-                color: active ? _kBg : _kTextDim,
+                color: active ? AppDarkColors.bg : AppDarkColors.textDim,
                 fontSize: 13,
                 fontWeight: active ? FontWeight.w800 : FontWeight.w500,
               ),
@@ -414,17 +417,17 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
       child: TextField(
         controller: _searchCtrl,
         onChanged: _onSearch,
-        style: const TextStyle(color: _kText, fontSize: 13),
+        style: const TextStyle(color: AppDarkColors.text, fontSize: 13),
         decoration: InputDecoration(
           hintText: 'Search products…',
-          hintStyle: const TextStyle(color: _kTextDim, fontSize: 13),
+          hintStyle: const TextStyle(color: AppDarkColors.textDim, fontSize: 13),
           prefixIcon: const Icon(
             Icons.search_rounded,
-            color: _kTextDim,
+            color: AppDarkColors.textDim,
             size: 18,
           ),
           filled: true,
-          fillColor: _kCard,
+          fillColor: AppDarkColors.card,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 14,
             vertical: 12,
@@ -436,7 +439,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: _kAccent.withOpacity(0.4),
+              color: AppDarkColors.accent.withOpacity(0.4),
               width: 1.5,
             ),
           ),
@@ -452,11 +455,15 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.label_off_rounded, color: _kTextDim, size: 48),
+            Icon(
+              Icons.label_off_rounded,
+              color: AppDarkColors.textDim,
+              size: 48,
+            ),
             SizedBox(height: 14),
             Text(
               'No products found',
-              style: TextStyle(color: _kText, fontSize: 16),
+              style: TextStyle(color: AppDarkColors.text, fontSize: 16),
             ),
           ],
         ),
@@ -482,7 +489,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
 
     return Container(
       decoration: BoxDecoration(
-        color: _kCard,
+        color: AppDarkColors.card,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Colors.white.withOpacity(0.06)),
       ),
@@ -515,7 +522,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                   child: _actionBtn(
                     icon: Icons.download_rounded,
                     label: 'Save',
-                    color: _kAccent,
+                    color: AppDarkColors.accent,
                     onTap: () => _saveLabel(p),
                   ),
                 ),
@@ -528,6 +535,9 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
   }
 
   // ── The printable label itself ─────────────────────────────────────────────
+  // Note: this is the physical label design (printed on white stock), so it
+  // intentionally uses fixed brand colors rather than the app's dark theme —
+  // but the values are pulled from AppDarkColors to keep one source of truth.
   Widget _buildLabelPreview(Product p) {
     return Container(
       width: double.infinity,
@@ -543,7 +553,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           Text(
             'STOCKFLOW',
             style: TextStyle(
-              color: const Color(0xFF0A0F1E),
+              color: AppDarkColors.bg,
               fontSize: _fontSize - 1,
               fontWeight: FontWeight.w900,
               letterSpacing: 2,
@@ -558,7 +568,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: const Color(0xFF1C2539),
+              color: AppDarkColors.card,
               fontSize: _fontSize + 1,
               fontWeight: FontWeight.w700,
               height: 1.3,
@@ -567,7 +577,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           Text(
             p.brand,
             style: TextStyle(
-              color: const Color(0xFF8892A4),
+              color: AppDarkColors.textDim,
               fontSize: _fontSize - 1,
             ),
           ),
@@ -582,9 +592,9 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                   height: _barcodeHeight,
                   style: TextStyle(
                     fontSize: _fontSize - 2,
-                    color: const Color(0xFF0A0F1E),
+                    color: AppDarkColors.bg,
                   ),
-                  color: const Color(0xFF0A0F1E),
+                  color: AppDarkColors.bg,
                   backgroundColor: Colors.transparent,
                 )
               : BarcodeWidget(
@@ -592,7 +602,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
                   data: p.barcode,
                   width: _barcodeHeight + 10,
                   height: _barcodeHeight + 10,
-                  color: const Color(0xFF0A0F1E),
+                  color: AppDarkColors.bg,
                   backgroundColor: Colors.transparent,
                 ),
 
@@ -602,13 +612,13 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
-              color: const Color(0xFF00E5A0),
+              color: AppDarkColors.accent,
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               '₦${_formatPrice(p.price)}',
               style: TextStyle(
-                color: const Color(0xFF0A0F1E),
+                color: AppDarkColors.bg,
                 fontSize: _fontSize + 1,
                 fontWeight: FontWeight.w800,
               ),
@@ -620,7 +630,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
           Text(
             p.barcode,
             style: TextStyle(
-              color: const Color(0xFF8892A4),
+              color: AppDarkColors.textDim,
               fontSize: _fontSize - 2,
               letterSpacing: 1,
             ),
@@ -634,7 +644,7 @@ class _BarcodeLabelsScreenState extends State<BarcodeLabelsScreen>
     required IconData icon,
     required String label,
     required VoidCallback onTap,
-    Color color = _kTextDim,
+    Color color = AppDarkColors.textDim,
   }) {
     return GestureDetector(
       onTap: onTap,

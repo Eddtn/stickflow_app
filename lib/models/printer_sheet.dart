@@ -1,8 +1,3 @@
-// Add this class at the bottom of your pos_screen.dart file
-// (after the ReceiptScreen class, before the last closing brace)
-//
-// Also add this import at the top of pos_screen.dart:
-// import '../services/printer_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:stockflow/services/printer_service.dart';
@@ -59,11 +54,12 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         total: widget.total,
         footer: widget.footer,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = '';
         });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -92,11 +88,12 @@ class _PrinterSheetState extends State<_PrinterSheet> {
         total: widget.total,
         footer: widget.footer,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           _printing = false;
           _status = '';
         });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -153,7 +150,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: kBlue.withOpacity(0.12),
+                  color: kBlue.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.print_rounded, color: kBlue, size: 22),
@@ -281,7 +278,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withOpacity(0.25)),
+            border: Border.all(color: color.withValues(alpha: 0.25)),
           ),
           child: Row(
             children: [
@@ -289,7 +286,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 22),
@@ -321,7 +318,7 @@ class _PrinterSheetState extends State<_PrinterSheet> {
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: color.withOpacity(0.5),
+                color: color.withValues(alpha: 0.5),
                 size: 20,
               ),
             ],
