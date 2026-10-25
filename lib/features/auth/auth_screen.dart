@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:stockflow/core/constant.dart';
 import 'package:stockflow/services/auth_service.dart';
 import 'lock_screen.dart';
@@ -198,12 +197,12 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
     decoration: BoxDecoration(
       gradient: LinearGradient(
         colors: [
-          AppDarkColors.blue.withOpacity(0.15),
-          AppDarkColors.accent.withOpacity(0.08),
+          AppDarkColors.blue.withValues(alpha: 0.15),
+          AppDarkColors.accent.withValues(alpha: 0.08),
         ],
       ),
       borderRadius: BorderRadius.circular(18),
-      border: Border.all(color: AppDarkColors.blue.withOpacity(0.25)),
+      border: Border.all(color: AppDarkColors.blue.withValues(alpha: 0.25)),
     ),
     child: Row(
       children: [
@@ -211,7 +210,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
           width: 52,
           height: 52,
           decoration: BoxDecoration(
-            color: AppDarkColors.blue.withOpacity(0.15),
+            color: AppDarkColors.blue.withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -295,10 +294,10 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
         Switch(
           value: _authEnabled,
           onChanged: _toggleAuth,
-          activeColor: AppDarkColors.accent,
+          activeThumbColor: AppDarkColors.accent,
           trackColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.selected)
-                ? AppDarkColors.accent.withOpacity(0.3)
+                ? AppDarkColors.accent.withValues(alpha: 0.3)
                 : Colors.white12,
           ),
         ),
@@ -451,7 +450,7 @@ class _AuthSetupScreenState extends State<AuthSetupScreen> {
               _settingsRow(
                 icon: Icons.delete_outline_rounded,
                 label: 'Remove Passcode',
-                color: AppDarkColors.danger,
+                color: const Color.fromARGB(255, 15, 6, 7),
                 onTap: _removePasscode,
               ),
             ],
