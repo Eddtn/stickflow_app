@@ -19,7 +19,20 @@ Most small warehouses, retail shops, and manufacturers in Nigeria track inventor
 
 ## Screenshots
 
-> Coming soon — demo video link will be added here
+### Homepage
+![Logistics Website Homepage](screenshots/homepage.png)
+
+### Label Generator
+![Logistics Website Homepage](screenshots/label_generator.png)
+
+### Product page
+![Logistics Website Homepage](screenshots/product.png)
+
+### Reports page
+![Logistics Website Homepage](screenshots/reports.png)
+
+### Scan page
+![Logistics Website Homepage](screenshots/scan.png)
 
 ---
 
@@ -29,9 +42,7 @@ Most small warehouses, retail shops, and manufacturers in Nigeria track inventor
 - 📦 **Product Management** — add/edit/delete products with barcode scanning and photo upload
 - 🔄 **Stock Movements** — record stock in/out with reasons, full audit trail, atomic transactions
 - 📈 **Reports** — pie charts, 7-day line charts, PDF and CSV export with date range filter
-- 👥 **Role-based Access** — admin and staff roles with different permissions
-- 🔔 **Push Notifications** — automatic alerts when stock falls below threshold
-- 🔐 **Authentication** — Firebase Auth with email/password and password reset
+
 
 ---
 
@@ -73,7 +84,6 @@ lib/
 **Key design decisions:**
 - Firestore **transactions** (atomic writes) ensure stock quantity and movement log never get out of sync
 - Riverpod **StreamProviders** keep the UI reactive to live Firestore changes
-- Role-based routing enforced at both the UI layer and Firestore security rules level
 - Transactions are **immutable** — once written, they cannot be updated or deleted (full audit trail)
 
 ---
@@ -82,7 +92,6 @@ lib/
 
 ### Prerequisites
 - Flutter SDK 3.x
-- Firebase account
 - Android Studio or VS Code
 
 ### 1. Clone the repo
@@ -93,60 +102,12 @@ cd stockflow
 flutter pub get
 ```
 
-### 2. Firebase setup
 
-1. Create a project at [console.firebase.google.com](https://console.firebase.google.com)
-2. Enable **Authentication** → Email/Password
-3. Enable **Firestore Database**
-4. Enable **Firebase Storage**
-5. Download `google-services.json` → place in `android/app/`
-6. Download `GoogleService-Info.plist` → place in `ios/Runner/`
 
-### 3. Apply Firestore security rules
-
-Copy the contents of `firestore.rules` into your Firestore console under the **Rules** tab.
-
-### 4. Create your first admin user
-
-In Firebase console → Authentication → Add user manually, then add their document to Firestore:
-
-```
-Collection: users
-Document ID: <user_uid>
-
-{
-  "uid": "<user_uid>",
-  "name": "Your Name",
-  "email": "admin@company.com",
-  "role": "admin",
-  "createdAt": <timestamp>,
-  "isActive": true
-}
-```
-
-### 5. Run the app
+### 4. Run the app
 
 ```bash
 flutter run
-```
-
----
-
-## Firestore Data Model
-
-```
-users/
-  {uid}
-    name, email, role (admin|staff), isActive
-
-products/
-  {productId}
-    name, sku, category, quantity, lowStockThreshold, unitPrice, imageUrl, createdBy, updatedAt
-
-transactions/
-  {txId}
-    productId, productName, type (in|out), quantity, reason,
-    performedBy, performedByName, timestamp, prevQty, newQty, note
 ```
 
 ---
